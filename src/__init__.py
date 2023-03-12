@@ -44,11 +44,11 @@ def womens():
     return render_template("womens.html")
 
 
-@app.errorhandler(500)
+""" @app.errorhandler(500)
 def page_internal_error(e):
     return render_template("pages-error-404.html")
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template("pages-error-404.html")
+    return render_template("pages-error-404.html") """

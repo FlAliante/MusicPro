@@ -8,4 +8,4 @@ site = Blueprint(
     static_url_path=''
 )
 
-from . import views_portfolio
+from . import portfolio
