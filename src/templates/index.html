@@ -20,39 +20,37 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     />
 
     <!--  CSS  -->
-    {% include "html/css.html" %}
+    {% include "inner_page/html/css.html" %}
 
     <!-- Specific Page CSS goes HERE  -->
     {% block stylesheets %}{% endblock %}
 
     <!--  JS  -->
-    {% include "html/js.html" %}
+    {% include "inner_page/html/js.html" %}
   </head>
   <body>
     <!-- header -->
-    {% include "html/header.html" %}
+    {% include "inner_page/html/header.html" %}
     <!-- //header -->
 
     <!-- banner -->
-    {% include "html/menu.html" %}
+    {% include "inner_page/html/menu.html" %}
     <!-- //banner -->
 
-    <div>
-      <div class="container">
-        <div class="mt-5">asd</div>
-      </div>
-    </div>
+    <!-- content -->
+    {% include "inner_page/html/content.html" %}
+    <!-- //content -->
 
     <!-- coupons -->
-    {% include "html/coupons.html" %}
+    {% include "inner_page/html/coupons.html" %}
     <!-- //coupons -->
 
     <!-- footer -->
-    {% include "html/footer.html" %}
+    {% include "inner_page/html/footer.html" %}
     <!-- //footer -->
 
     <!-- login -->
-    {% include "html/login.html" %}
+    {% include "inner_page/html/login.html" %}
     <!-- //login -->
 
     <!-- Specific Page JS goes HERE  -->
