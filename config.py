@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 # mysql://username:password@host:port/database
 uri = 'mysql://eja6vsq4rh1hw5pe:h341m14hjbajg524@migae5o25m2psr4q.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306/ynghoqdpmk0i149y'
 engine = create_engine(uri, poolclass=NullPool)
-db_session = scoped_session(sessionmaker(autocommit=True, autoflush=False, bind=engine))
+db_session = scoped_session(sessionmaker(autocommit=False, autoflush=True, bind=engine))
 Base = declarative_base()
 Base.query = db_session.query_property()
 

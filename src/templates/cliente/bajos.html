@@ -1,0 +1,80 @@
+{% extends "inner_page/client.html" %}
+
+{% block stylesheets %}
+<!-- bootstrap CSS only -->
+<link href="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<!-- mens -->
+<div class="men-wear">
+  <div class="container">
+    <div class="col-md products-right">
+      <h5 class="mb-2">Product Compare(0)</h5>
+      <div class="clearfix"></div>
+
+      <table id="table" data-toggle="table" data-method="post" data-search="true" data-locale="es-CL"
+        data-url="/portfolio/list" data-loading-font-size="14px" >
+        <thead>
+          <tr>
+            <th data-field="id" data-sortable="true">id</th>
+            <th data-field="photo" data-sortable="true">photo</th>
+            <th data-field="price" data-sortable="true">price</th>
+            <th data-field="title" data-sortable="true">title</th>
+          </tr>
+        </thead>
+      </table>
+
+      <div class="clearfix"></div>
+    </div>
+
+    <div class="clearfix"></div>
+  </div>
+</div>
+<!-- //mens -->
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table-locale-all.min.js"></script>
+
+<script>
+  $(function () {
+    var order = false
+    $("#table2").bootstrapTable({
+      locale: "es-CL",
+      ajax: (params) => {
+
+        $.post("/portfolio/list", $.param(params.data), (data) => {
+          console.log(data);
+          params.success(data);
+
+          //if (data.total == 0) {
+          //  $("#loadNoResult").show()
+          //} else {
+          //  params.success(data);
+          //}
+
+        }).fail((jqXHR, textStatus, error) => {
+          console.error(jqXHR);
+          params.success([]);
+        }).always(() => {
+        });
+      },
+      onPageChange: (number, size) => {
+        //console.log('hola')
+      },
+    });
+  });
+
+  function loadingTemplate(message) {
+    return 'El asd<div class="ph-item"><div class="ph-picture"></div></div>';
+  }
+
+  function reloadImage(img) {
+    img.onerror = null
+    img.src = 'img/not_loading_product.png'
+  }
+</script>
+{% endblock %}

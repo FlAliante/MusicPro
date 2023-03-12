@@ -1,0 +1,137 @@
+{% extends "inner_page/client.html" %}
+
+{% block stylesheets %}
+<!-- bootstrap CSS only -->
+<link href="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<!-- mens -->
+<div class="men-wear">
+  <div class="container">
+    <div class="col-md products-right">
+      <h5 class="mb-2">Product Compare(0)</h5>
+      <div class="clearfix"></div>
+
+      <!-- <table id="table" data-pagination-v-align="both" data-show-search-button="true">
+        <thead>
+          <tr>
+            <th data-field="Title__c">Name</th>
+            <th data-field="Description__c">Follower</th>
+          </tr>
+        </thead>
+      </table> -->
+
+      <table id="table" data-toggle="table" data-flat="true" data-search="true">
+        <thead>
+          <tr>
+            <th data-field="id" data-sortable="true">Name</th>
+            <th data-field="github.count.stargazers" data-sortable="true">Stargazers</th>
+            <th data-field="github.count.forks" data-sortable="true">Forks</th>
+            <th data-field="github.description" data-sortable="true">Description</th>
+          </tr>
+        </thead>
+      </table>
+
+      <div class="clearfix"></div>
+    </div>
+
+    <div class="clearfix"></div>
+  </div>
+</div>
+<!-- //mens -->
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table.min.js"></script>
+
+<script>
+  $(function () {
+    var order = false
+    $("#table").bootstrapTable({
+      showRefresh: true,
+      //showFullscreen: true,
+      locale: "es-CL",
+      //pageSize: 12,
+      //pageList: "[12, 24, 36, 60, 120, All]",
+      //sortable: true,
+      //sortName: "price",
+      //sortOrder: "asc",
+      //pagination: true,
+      //sidePagination: "server",
+      //search: true,
+      //buttonsAlign: "left",
+      //searchAlign: "left",
+      ////searchText: "Buscar por nombre",
+      //paginationPreText: "Anterior",
+      //paginationNextText: "Siguiente",
+      //showCustomView: "true",
+      //showButtonText: "true",
+      //paginationVAlign: "both",
+      //loadingTemplate: "loadingTemplate",
+      ajax: (params) => {
+
+        $.post("/portfolio/list", $.param(params.data), (data) => {
+          console.log(data);
+          params.success(data);
+
+          //if (data.total == 0) {
+          //  $("#loadNoResult").show()
+          //} else {
+          //  params.success(data);
+          //}
+
+        }).fail((jqXHR, textStatus, error) => {
+          console.error(jqXHR);
+          params.success([]);
+        }).always(() => {
+        });
+      },
+      //customView: (data) => {
+      //  var view = "";
+      //  var template = $("#profileTemplate").html();
+      //  var formatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", });
+      //  $.each(data, function (i, row) {
+      //    view += template
+      //      .replace("%id%", row.id)
+      //      .replace("%title%", row.title)
+      //      .replace("%url%", row.url)
+      //      .replace("%photo%", row.photo)
+      //      .replace("%price%", formatter.format(row.price));
+      //  });
+      //  return `<div class="row">${view}</div>`;
+      //},
+      //buttons: (data) => {
+      //  order = order ? false : true
+      //  return {
+      //    btnUsersAdd: {
+      //      text: "Ordenar por Precio",
+      //      icon: order ? "bi bi-sort-numeric-down" : "bi bi-sort-numeric-up-alt",
+      //      event: function () {
+      //        $('#table').bootstrapTable('refreshOptions', {
+      //          sortOrder: order ? 'desc' : 'asc'
+      //        })
+      //      },
+      //      attributes: {
+      //        title: "Ordenar por Precio",
+      //      },
+      //    },
+      //  };
+      //},
+      onPageChange: (number, size) => {
+        //console.log('hola')
+      },
+    });
+  });
+
+  function loadingTemplate(message) {
+    return 'El asd<div class="ph-item"><div class="ph-picture"></div></div>';
+  }
+
+  function reloadImage(img) {
+    img.onerror = null
+    img.src = 'img/not_loading_product.png'
+  }
+</script>
+{% endblock %}
