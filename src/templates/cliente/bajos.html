@@ -1,9 +1,6 @@
-{% extends "inner_page/client.html" %}
+{% extends "client.html" %}
 
-{% block stylesheets %}
-<!-- bootstrap CSS only -->
-<link href="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table.min.css" rel="stylesheet" />
-{% endblock %}
+{% block stylesheets %}{% endblock %}
 
 {% block content %}
 <!-- mens -->
@@ -13,14 +10,16 @@
       <h5 class="mb-2">Product Compare(0)</h5>
       <div class="clearfix"></div>
 
-      <table id="table" data-toggle="table" data-method="post" data-search="true" data-locale="es-CL"
-        data-url="/portfolio/list" data-loading-font-size="14px" >
+      <table id="table" data-toggle="table" data-method="get" data-locale="es-CL"
+        data-url="/portfolio/list" data-loading-font-size="14px" data-url="">
         <thead>
           <tr>
             <th data-field="id" data-sortable="true">id</th>
+            <th data-field="description" data-sortable="true">description</th>
+            <th data-field="create_time" data-sortable="true">create_time</th>
+            <th data-field="update_time" data-sortable="true">update_time</th>
             <th data-field="photo" data-sortable="true">photo</th>
-            <th data-field="price" data-sortable="true">price</th>
-            <th data-field="title" data-sortable="true">title</th>
+            <th data-field="url_nintendo" data-sortable="true">url_nintendo</th>
           </tr>
         </thead>
       </table>
@@ -35,10 +34,6 @@
 {% endblock %}
 
 {% block javascripts %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-<script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table.min.js"></script>
-<script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table-locale-all.min.js"></script>
-
 <script>
   $(function () {
     var order = false
@@ -46,7 +41,7 @@
       locale: "es-CL",
       ajax: (params) => {
 
-        $.post("/portfolio/list", $.param(params.data), (data) => {
+        $.get("/portfolio/list", $.param(params.data), (data) => {
           console.log(data);
           params.success(data);
 
@@ -62,8 +57,8 @@
         }).always(() => {
         });
       },
-      onPageChange: (number, size) => {
-        //console.log('hola')
+      onLoadSuccess: (number, size) => {
+        console.log('hola')
       },
     });
   });
