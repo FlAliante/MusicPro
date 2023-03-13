@@ -1,54 +1,34 @@
 from flask import Flask, render_template
-#from src.controller.product import product
 
-#from .NiceAdmin import admin
-#from .SailorSite import site
+# from .views.administrador import view_administrador
+# from .views.bodeguero import view_bodeguero
+from .views.cliente import view_cliente
+# from .views.contador import view_contador
+from .views.demo import view_demo
+
+# from .views.vendedor import view_vendedor
+
 
 app = Flask(__name__)
 
-#app.register_blueprint(admin)
-#app.register_blueprint(site)
+# app.register_blueprint(view_administrador)
+# app.register_blueprint(view_bodeguero)
+app.register_blueprint(view_cliente)
+# app.register_blueprint(view_contador)
+app.register_blueprint(view_demo)
+# app.register_blueprint(view_vendedor)
 
-
-@app.route("/checkout.html")
-def checkout():
-    return render_template("checkout.html")
-
-@app.route("/codes.html")
-def codes():
-    return render_template("codes.html")
-
-@app.route("/contact.html")
-def contact():
-    return render_template("contact.html")
-
-@app.route("/electronics.html")
-def electronics():
-    return render_template("electronics.html")
 
 @app.route("/")
 @app.route("/index.html")
 def index():
-    return render_template("Base/index.html")
-
-@app.route("/mens.html")
-def mens():
-    return render_template("mens.html")
-
-@app.route("/single.html")
-def single():
-    return render_template("single.html")
-
-@app.route("/womens.html")
-def womens():
-    return render_template("womens.html")
+    return render_template("index.html")
 
 
-@app.errorhandler(500)
+""" @app.errorhandler(500)
 def page_internal_error(e):
     return render_template("pages-error-404.html")
 
-
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template("pages-error-404.html")
+    return render_template("pages-error-404.html") """
