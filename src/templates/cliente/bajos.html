@@ -6,28 +6,13 @@
 <!-- mens -->
 <div class="men-wear">
   <div class="container">
-    <div class="col-md products-right">
-      <h5 class="mb-2">Product Compare(0)</h5>
-      <div class="clearfix"></div>
 
-      <table id="table" data-toggle="table" data-method="get" data-locale="es-CL"
-        data-url="/portfolio/list" data-loading-font-size="14px" data-url="">
-        <thead>
-          <tr>
-            <th data-field="id" data-sortable="true">id</th>
-            <th data-field="description" data-sortable="true">description</th>
-            <th data-field="create_time" data-sortable="true">create_time</th>
-            <th data-field="update_time" data-sortable="true">update_time</th>
-            <th data-field="photo" data-sortable="true">photo</th>
-            <th data-field="url_nintendo" data-sortable="true">url_nintendo</th>
-          </tr>
-        </thead>
-      </table>
-
-      <div class="clearfix"></div>
+    <div class="products-right">
+      <h5 class="mb-2">Inventario Producto</h5>
+      <!-- bootstrapTable -->
+      <table id="table"></table>
     </div>
 
-    <div class="clearfix"></div>
   </div>
 </div>
 <!-- //mens -->
@@ -37,39 +22,36 @@
 <script>
   $(function () {
     var order = false
-    $("#table2").bootstrapTable({
-      locale: "es-CL",
-      ajax: (params) => {
-
-        $.get("/portfolio/list", $.param(params.data), (data) => {
-          console.log(data);
-          params.success(data);
-
-          //if (data.total == 0) {
-          //  $("#loadNoResult").show()
-          //} else {
-          //  params.success(data);
-          //}
-
-        }).fail((jqXHR, textStatus, error) => {
-          console.error(jqXHR);
-          params.success([]);
-        }).always(() => {
-        });
-      },
+    $("#table").bootstrapTable({
+      url: '/portfolio/list',
+      columns: [
+        { field: 'description', sortable: true, title: 'Description' },
+        { field: 'create_time', sortable: true, title: 'Create Time' },
+        { field: 'update_time', sortable: true, title: 'Update Time' },
+        { field: 'price', sortable: true, title: 'Price' },
+        { field: 'photo', sortable: false, title: 'Photo' },
+        { field: 'url_nintendo', sortable: false, title: 'Url Nintendo' }
+      ],
+      loadingFontSize: "14px",
+      locale: 'es-CL',
+      //buttonsAlign: 'left',
+      search: true,
+      searchAlign: 'left',
+      sortable: true,
+      pageSize: 10,
+      pagination: true,
+      paginationPreText: 'Anterior',
+      paginationNextText: 'Siguiente',
+      paginationVAlign: "both",
+      //paginationParts: ["pageInfo", "pageInfoShort", "pageSize", "pageList"],
+      paginationParts: ["pageInfo", "pageList"],
       onLoadSuccess: (number, size) => {
         console.log('hola')
       },
+      onPageChange: (number, size) => {
+        window.scrollTo(0, 0)
+      },
     });
   });
-
-  function loadingTemplate(message) {
-    return 'El asd<div class="ph-item"><div class="ph-picture"></div></div>';
-  }
-
-  function reloadImage(img) {
-    img.onerror = null
-    img.src = 'img/not_loading_product.png'
-  }
 </script>
 {% endblock %}

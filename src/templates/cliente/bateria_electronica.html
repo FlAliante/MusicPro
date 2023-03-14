@@ -1,0 +1,101 @@
+{% extends "client.html" %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block content %}
+<div style="margin-block: 18px;" class="container">
+
+    <table id="myTable"></table>
+
+    <template id="profileTemplate">
+        <div class="col-md-3 product-men mb-3" style="margin-bottom: 15px;">
+            <div class="men-pro-item simpleCart_shelfItem">
+                <div class="men-thumb-item">
+                    <img src="static/images/a8.png" alt="" class="pro-image-front" />
+                    <img src="static/images/a8.png" alt="" class="pro-image-back" />
+                    <div class="men-cart-pro">
+                        <div class="inner-men-cart-pro">
+                            <a href="single.html" class="link-product-add-cart">Ver Producto</a>
+                        </div>
+                    </div>
+                    <span class="product-new-top">New</span>
+                </div>
+                <div class="item-info-product">
+                    <h4><a href="single.html" label="asd">%description%</a></h4>
+                    <div class="info-product-price">
+                        <span class="item_price">$45.99</span>
+                        <del>$69.71</del>
+                    </div>
+                    <a href="#" class="item_add single-item hvr-outline-out button2">Agregar al Carrito</a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+<!--     <div id="cargandoDatos">
+        <h1>Cargando datos...</h1>
+        <p>Por favor espere mientras se cargan los datos.</p>
+        <div class='progress'>
+            <div class="progress-bar progress-bar-striped active" style="width:100%"></div>
+        </div>
+
+        <div class="text-center">
+            <i class="fa fa-spinner fa-spin fa-3x"></i>
+          </div>
+          
+    </div> -->
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script
+    src="https://unpkg.com/bootstrap-table@1.21.3/dist/extensions/custom-view/bootstrap-table-custom-view.js"></script>
+<script>
+    $(function () {
+        $('#myTable').bootstrapTable({
+            url: '/portfolio/list',
+            loadingFontSize: "14px",
+            pagination: true,
+            pageSize: 8,
+            locale: 'es-CL',
+            toggle:"table",
+            search: true,
+
+            //sidePagination: 'server',
+            //buttonsAlign: 'left',
+            //searchAlign: 'left',
+            //paginationPreText: 'Anterior',
+            //paginationNextText: 'Siguiente',
+            //sortName: 'price',
+            //sortOrder: 'asc',
+            showCustomView: true,
+            customView: (data) => {
+                // Agregamos el HTML para cargar los datos
+                var view = "";
+                var template = $("#profileTemplate").html();
+                $.each(data, function (i, row) {
+                    if (row.description.length > 15) {
+                        row.description = row.description.substring(0, 15) + "...";
+                    }
+                    view += template
+                        .replace("%description%", row.description)
+                });
+                return `<div class="row">${view}</div>`;
+            },
+            //onLoadSuccess: function (data) {
+            //    $(".fixed-table-container, .fixed-table-pagination").show();
+            //    $("#cargandoDatos").hide()
+            //},
+            onPageChange: (number, size) => {
+                //$(".fixed-table-container, .fixed-table-pagination").hide();
+                //$("#cargandoDatos").show()
+                window.scrollTo(0, 0)
+            },
+        });
+
+        //$(".fixed-table-body").hide()
+        $("[name='customView']").click().hide()
+    })
+</script>
+{% endblock %}
