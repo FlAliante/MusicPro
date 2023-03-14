@@ -1,6 +1,12 @@
 {% extends "client.html" %}
 
-{% block stylesheets %}{% endblock %}
+{% block stylesheets %}
+<style>
+  .bg-custom {
+    background-color: #fda30e;
+  }
+</style>
+{% endblock %}
 
 {% block content %}
 <!-- mens -->
@@ -10,25 +16,8 @@
     <div class="products-right">
       <h5 class="mb-2">Guitarras</h5>
 
-      <!-- <div class="men-wear-bottom">
-        <div class="col-sm-4 men-wear-left">
-          <img class="img-responsive" src="static/images/men3.jpg" alt=" " />
-        </div>
-        <div class="col-sm-8 men-wear-right">
-          <h4>Exclusive Men's Collections</h4>
-          <p>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-            quae ab illo inventore veritatis et quasi architecto beatae vitae
-            dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
-            aspernatur aut odit aut fugit.
-          </p>
-        </div>
-        <div class="clearfix"></div>
-      </div> -->
-
+      <!-- myTable -->
       <table id="myTable"></table>
-
       <template id="profileTemplate">
         <div class="col-md-3 product-men mb-3" style="margin-bottom: 15px;">
           <div class="men-pro-item simpleCart_shelfItem">
@@ -53,21 +42,33 @@
           </div>
         </div>
       </template>
+      <!-- //myTable -->
 
+      <!-- progress -->
+      <div class='progress'>
+        <div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
+      </div>
+      <!-- //progress -->
+
+      <!-- men-wear-bottom -->
+      <div class="men-wear-bottom">
+        <div class="col-sm-4 men-wear-left">
+          <img class="img-responsive" src="static/images/men3.jpg" alt=" " />
+        </div>
+        <div class="col-sm-8 men-wear-right">
+          <h4>Exclusive Men's Collections</h4>
+          <p>
+            Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+            accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+            quae ab illo inventore veritatis et quasi architecto beatae vitae
+            dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+            aspernatur aut odit aut fugit.
+          </p>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <!-- //men-wear-bottom -->
     </div>
-
-    <!--     <div id="cargandoDatos">
-          <h1>Cargando datos...</h1>
-          <p>Por favor espere mientras se cargan los datos.</p>
-          <div class='progress'>
-              <div class="progress-bar progress-bar-striped active" style="width:100%"></div>
-          </div>
-  
-          <div class="text-center">
-              <i class="fa fa-spinner fa-spin fa-3x"></i>
-            </div>
-            
-      </div> -->
 
   </div>
 </div>
@@ -118,15 +119,15 @@
       //paginationParts: ["pageInfo", "pageInfoShort", "pageSize", "pageList"],
       paginationParts: ["pageInfo", "pageList"],
       onLoadSuccess: (number, size) => {
-        console.log('hola')
+        $(".progress").hide();
       },
       onPageChange: (number, size) => {
-        //window.scrollTo(0, 0)
+        window.scrollTo(0, 0)
       },
     });
 
-    //$(".fixed-table-body").hide()
-    $("[name='customView']").click().hide()
+    $("[name='customView']").click().remove();
+    $(".fixed-table-body").hide()
   })
 </script>
 {% endblock %}
