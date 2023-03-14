@@ -1,14 +1,16 @@
-{% extends "client.html" %} {% block stylesheets %}
-<!-- bootstrap CSS only -->
-<style></style>
-{% endblock %} {% block content %}
+{% extends "client.html" %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block content %}
 <!-- mens -->
 <div class="men-wear">
   <div class="container">
-    <div class="col-md products-right">
-      <h5 class="mb-2">Product Compare(0)</h5>
 
-      <div class="men-wear-bottom">
+    <div class="products-right">
+      <h5 class="mb-2">Guitarras</h5>
+
+      <!-- <div class="men-wear-bottom">
         <div class="col-sm-4 men-wear-left">
           <img class="img-responsive" src="static/images/men3.jpg" alt=" " />
         </div>
@@ -23,242 +25,108 @@
           </p>
         </div>
         <div class="clearfix"></div>
-      </div>
+      </div> -->
 
-      <div class="clearfix"></div>
+      <table id="myTable"></table>
+
+      <template id="profileTemplate">
+        <div class="col-md-3 product-men mb-3" style="margin-bottom: 15px;">
+          <div class="men-pro-item simpleCart_shelfItem">
+            <div class="men-thumb-item">
+              <img src="static/images/a8.png" alt="" class="pro-image-front" />
+              <img src="static/images/a8.png" alt="" class="pro-image-back" />
+              <div class="men-cart-pro">
+                <div class="inner-men-cart-pro">
+                  <a href="single.html" class="link-product-add-cart">Ver Producto</a>
+                </div>
+              </div>
+              <span class="product-new-top">New</span>
+            </div>
+            <div class="item-info-product">
+              <h4><a href="single.html" label="asd">%description%</a></h4>
+              <div class="info-product-price">
+                <span class="item_price">$45.99</span>
+                <del>$69.71</del>
+              </div>
+              <a href="#" class="item_add single-item hvr-outline-out button2">Agregar al Carrito</a>
+            </div>
+          </div>
+        </div>
+      </template>
+
     </div>
-    <div class="clearfix"></div>
-    <div class="single-pro">
-      <div class="col-md-3 product-men">
-        <div class="men-pro-item simpleCart_shelfItem">
-          <div class="men-thumb-item">
-            <img src="static/images/a8.png" alt="" class="pro-image-front" />
-            <img src="static/images/a8.png" alt="" class="pro-image-back" />
-            <div class="men-cart-pro">
-              <div class="inner-men-cart-pro">
-                <a href="single.html" class="link-product-add-cart"
-                  >Quick View</a
-                >
-              </div>
-            </div>
-            <span class="product-new-top">New</span>
+
+    <!--     <div id="cargandoDatos">
+          <h1>Cargando datos...</h1>
+          <p>Por favor espere mientras se cargan los datos.</p>
+          <div class='progress'>
+              <div class="progress-bar progress-bar-striped active" style="width:100%"></div>
           </div>
-          <div class="item-info-product">
-            <h4><a href="single.html">Blazers</a></h4>
-            <div class="info-product-price">
-              <span class="item_price">$45.99</span>
-              <del>$69.71</del>
+  
+          <div class="text-center">
+              <i class="fa fa-spinner fa-spin fa-3x"></i>
             </div>
-            <a href="#" class="item_add single-item hvr-outline-out button2"
-              >Add to cart</a
-            >
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 product-men">
-        <div class="men-pro-item simpleCart_shelfItem">
-          <div class="men-thumb-item">
-            <img src="static/images/mw1.png" alt="" class="pro-image-front" />
-            <img src="static/images/mw1.png" alt="" class="pro-image-back" />
-            <div class="men-cart-pro">
-              <div class="inner-men-cart-pro">
-                <a href="single.html" class="link-product-add-cart"
-                  >Quick View</a
-                >
-              </div>
-            </div>
-            <span class="product-new-top">New</span>
-          </div>
-          <div class="item-info-product">
-            <h4><a href="single.html">Sandals</a></h4>
-            <div class="info-product-price">
-              <span class="item_price">$45.99</span>
-              <del>$69.71</del>
-            </div>
-            <a href="#" class="item_add single-item hvr-outline-out button2"
-              >Add to cart</a
-            >
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 product-men">
-        <div class="men-pro-item simpleCart_shelfItem">
-          <div class="men-thumb-item">
-            <img src="static/images/ep3.png" alt="" class="pro-image-front" />
-            <img src="static/images/ep3.png" alt="" class="pro-image-back" />
-            <div class="men-cart-pro">
-              <div class="inner-men-cart-pro">
-                <a href="single.html" class="link-product-add-cart"
-                  >Quick View</a
-                >
-              </div>
-            </div>
-            <span class="product-new-top">New</span>
-          </div>
-          <div class="item-info-product">
-            <h4><a href="single.html">Watches</a></h4>
-            <div class="info-product-price">
-              <span class="item_price">$45.99</span>
-              <del>$69.71</del>
-            </div>
-            <a href="#" class="item_add single-item hvr-outline-out button2"
-              >Add to cart</a
-            >
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 product-men">
-        <div class="men-pro-item simpleCart_shelfItem">
-          <div class="men-thumb-item">
-            <img src="static/images/mw3.png" alt="" class="pro-image-front" />
-            <img src="static/images/mw3.png" alt="" class="pro-image-back" />
-            <div class="men-cart-pro">
-              <div class="inner-men-cart-pro">
-                <a href="single.html" class="link-product-add-cart"
-                  >Quick View</a
-                >
-              </div>
-            </div>
-            <span class="product-new-top">New</span>
-          </div>
-          <div class="item-info-product">
-            <h4><a href="single.html">Shoes</a></h4>
-            <div class="info-product-price">
-              <span class="item_price">$45.99</span>
-              <del>$69.71</del>
-            </div>
-            <a href="#" class="item_add single-item hvr-outline-out button2"
-              >Add to cart</a
-            >
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 product-men yes-marg">
-        <div class="men-pro-item simpleCart_shelfItem">
-          <div class="men-thumb-item">
-            <img src="static/images/g3.png" alt="" class="pro-image-front" />
-            <img src="static/images/g3.png" alt="" class="pro-image-back" />
-            <div class="men-cart-pro">
-              <div class="inner-men-cart-pro">
-                <a href="single.html" class="link-product-add-cart"
-                  >Quick View</a
-                >
-              </div>
-            </div>
-            <span class="product-new-top">New</span>
-          </div>
-          <div class="item-info-product">
-            <h4><a href="single.html">Shirts</a></h4>
-            <div class="info-product-price">
-              <span class="item_price">$45.99</span>
-              <del>$69.71</del>
-            </div>
-            <a href="#" class="item_add single-item hvr-outline-out button2"
-              >Add to cart</a
-            >
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 product-men yes-marg">
-        <div class="men-pro-item simpleCart_shelfItem">
-          <div class="men-thumb-item">
-            <img src="static/images/ep4.png" alt="" class="pro-image-front" />
-            <img src="static/images/ep4.png" alt="" class="pro-image-back" />
-            <div class="men-cart-pro">
-              <div class="inner-men-cart-pro">
-                <a href="single.html" class="link-product-add-cart"
-                  >Quick View</a
-                >
-              </div>
-            </div>
-            <span class="product-new-top">New</span>
-          </div>
-          <div class="item-info-product">
-            <h4><a href="single.html">Watches</a></h4>
-            <div class="info-product-price">
-              <span class="item_price">$119.99</span>
-              <del>$150.71</del>
-            </div>
-            <a href="#" class="item_add single-item hvr-outline-out button2"
-              >Add to cart</a
-            >
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 product-men yes-marg">
-        <div class="men-pro-item simpleCart_shelfItem">
-          <div class="men-thumb-item">
-            <img src="static/images/mw2.png" alt="" class="pro-image-front" />
-            <img src="static/images/mw2.png" alt="" class="pro-image-back" />
-            <div class="men-cart-pro">
-              <div class="inner-men-cart-pro">
-                <a href="single.html" class="link-product-add-cart"
-                  >Quick View</a
-                >
-              </div>
-            </div>
-            <span class="product-new-top">New</span>
-          </div>
-          <div class="item-info-product">
-            <h4><a href="single.html">T shirts</a></h4>
-            <div class="info-product-price">
-              <span class="item_price">$45.99</span>
-              <del>$69.71</del>
-            </div>
-            <a href="#" class="item_add single-item hvr-outline-out button2"
-              >Add to cart</a
-            >
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 product-men yes-marg">
-        <div class="men-pro-item simpleCart_shelfItem">
-          <div class="men-thumb-item">
-            <img src="static/images/g2.png" alt="" class="pro-image-front" />
-            <img src="static/images/g2.png" alt="" class="pro-image-back" />
-            <div class="men-cart-pro">
-              <div class="inner-men-cart-pro">
-                <a href="single.html" class="link-product-add-cart"
-                  >Quick View</a
-                >
-              </div>
-            </div>
-            <span class="product-new-top">New</span>
-          </div>
-          <div class="item-info-product">
-            <h4><a href="single.html"> Shirts</a></h4>
-            <div class="info-product-price">
-              <span class="item_price">$45.99</span>
-              <del>$69.71</del>
-            </div>
-            <a href="#" class="item_add single-item hvr-outline-out button2"
-              >Add to cart</a
-            >
-          </div>
-        </div>
-      </div>
-      <div class="clearfix"></div>
-    </div>
-    <div class="pagination-grid text-right">
-      <ul class="pagination paging">
-        <li>
-          <a href="#" aria-label="Previous"
-            ><span aria-hidden="true">«</span></a
-          >
-        </li>
-        <li class="active">
-          <a href="#">1<span class="sr-only">(current)</span></a>
-        </li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
-        <li>
-          <a href="#" aria-label="Next"><span aria-hidden="true">»</span></a>
-        </li>
-      </ul>
-    </div>
+            
+      </div> -->
+
   </div>
 </div>
 <!-- //mens -->
-{% endblock %} {% block javascripts %} {% endblock %}
+
+{% endblock %}
+
+{% block javascripts %}
+<script
+  src="https://unpkg.com/bootstrap-table@1.21.3/dist/extensions/custom-view/bootstrap-table-custom-view.js"></script>
+<script>
+  $(function () {
+    $("#myTable").bootstrapTable({
+      url: '/portfolio/list',
+      columns: [
+        { field: 'description', sortable: true, title: 'Description' },
+        { field: 'create_time', sortable: true, title: 'Create Time' },
+        { field: 'update_time', sortable: true, title: 'Update Time' },
+        { field: 'price', sortable: true, title: 'Price' },
+        { field: 'photo', sortable: false, title: 'Photo' },
+        { field: 'url_nintendo', sortable: false, title: 'Url Nintendo' }
+      ],
+      showCustomView: true,
+      customView: (data) => {
+        // Agregamos el HTML para cargar los datos
+        var view = "";
+        var template = $("#profileTemplate").html();
+        $.each(data, function (i, row) {
+          if (row.description.length > 15) {
+            row.description = row.description.substring(0, 15) + "...";
+          }
+          view += template
+            .replace("%description%", row.description)
+        });
+        return `<div class="row">${view}</div>`;
+      },
+      loadingFontSize: "14px",
+      locale: 'es-CL',
+      //buttonsAlign: 'left',
+      search: true,
+      searchAlign: 'left',
+      sortable: true,
+      pageSize: 8,
+      pagination: true,
+      paginationPreText: 'Anterior',
+      paginationNextText: 'Siguiente',
+      paginationVAlign: "both",
+      //paginationParts: ["pageInfo", "pageInfoShort", "pageSize", "pageList"],
+      paginationParts: ["pageInfo", "pageList"],
+      onLoadSuccess: (number, size) => {
+        console.log('hola')
+      },
+      onPageChange: (number, size) => {
+        //window.scrollTo(0, 0)
+      },
+    });
+
+    //$(".fixed-table-body").hide()
+    $("[name='customView']").click().hide()
+  })
+</script>
+{% endblock %}

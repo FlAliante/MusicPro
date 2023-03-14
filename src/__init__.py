@@ -1,11 +1,9 @@
 from flask import Flask, render_template
-
 # from .views.administrador import view_administrador
 # from .views.bodeguero import view_bodeguero
 from .views.cliente import view_cliente
 # from .views.contador import view_contador
 from .views.demo import view_demo
-
 # from .views.vendedor import view_vendedor
 
 
