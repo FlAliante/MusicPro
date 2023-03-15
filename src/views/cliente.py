@@ -25,6 +25,10 @@ def bateria_electronica():
 def bajos():
     return render_template("cliente/bajos.html")
 
+@view_cliente.route("/pianos.html")
+def pianos():
+    return render_template("cliente/pianos.html")
+
 @view_cliente.route("/productos")
 def productos():
     return render_template("cliente/productos.html", productos=productos)

@@ -31,6 +31,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   <link
     href="//fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,900,900italic,700italic"
     rel="stylesheet" type="text/css" />
+  <style>
+    .bg-custom {
+      background-color: #fda30e;
+    }
+  </style>
   <!-- Specific Page CSS goes HERE  -->
   {% block stylesheets %}{% endblock %}
 </head>
@@ -40,12 +45,40 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   {% include "inner_page/header.html" %}
   <!-- //header -->
 
-  <!-- banner -->
+  <!-- login -->
+  {% include "inner_page/login.html" %}
+  <!-- //login -->
+
+  <!-- menu -->
   {% include "inner_page/menu.html" %}
-  <!-- //banner -->
+  <!-- //menu -->
 
   <!-- content -->
-  {% block content %}{% endblock %}
+  <div class="container" style="margin-block: 65px;">
+    {% block content %}
+
+    {% endblock %}
+    <!-- men-wear-bottom -->
+    <div class="men-wear-bottom">
+      <div class="col-sm-4 men-wear-left">
+        <img class="img-responsive"
+          src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F1023%2F7433%2Fproducts%2FC40_b632efb6-e5db-495c-9399-d8db96044cc8.png%3Fv%3D1569040586&f=1&nofb=1&ipt=8cce21da2e965e058173725c861f0ccae518303732c63db60b99eeea36b76999&ipo=images"
+          alt=" " />
+      </div>
+      <div class="col-sm-8 men-wear-right">
+        <h4>Exclusive Collections</h4>
+        <p>
+          Sed ut perspiciatis unde omnis iste natus error sit voluptatem
+          accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
+          quae ab illo inventore veritatis et quasi architecto beatae vitae
+          dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit
+          aspernatur aut odit aut fugit.
+        </p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <!-- //men-wear-bottom -->
+  </div>
   <!-- //content -->
 
   <!-- coupons -->
@@ -55,10 +88,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   <!-- footer -->
   {% include "inner_page/footer.html" %}
   <!-- //footer -->
-
-  <!-- login -->
-  {% include "inner_page/login.html" %}
-  <!-- //login -->
 
   <!-- js -->
   <script type="application/x-javascript">
