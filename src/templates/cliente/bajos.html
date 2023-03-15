@@ -3,19 +3,21 @@
 {% block stylesheets %}{% endblock %}
 
 {% block content %}
-<!-- mens -->
-<div class="men-wear">
-  <div class="container">
-
-    <div class="products-right">
-      <h5 class="mb-2">Inventario Producto</h5>
-      <!-- bootstrapTable -->
-      <table id="table"></table>
-    </div>
-
-  </div>
+<!-- title -->
+<div class="products-right">
+  <h5 class="mb-2">Inventario Producto</h5>
 </div>
-<!-- //mens -->
+<!-- //title -->
+
+<!-- progress -->
+<div class='progress' style="margin-top: 15px;">
+  <div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
+</div>
+<!-- //progress -->
+
+<!-- bootstrapTable -->
+<table id="table"></table>
+<!-- //bootstrapTable -->
 {% endblock %}
 
 {% block javascripts %}
@@ -30,11 +32,10 @@
         { field: 'update_time', sortable: true, title: 'Update Time' },
         { field: 'price', sortable: true, title: 'Price' },
         { field: 'photo', sortable: false, title: 'Photo' },
-        { field: 'url_nintendo', sortable: false, title: 'Url Nintendo' }
+        //{ field: 'url_nintendo', sortable: false, title: 'Url Nintendo' }
       ],
       loadingFontSize: "14px",
       locale: 'es-CL',
-      //buttonsAlign: 'left',
       search: true,
       searchAlign: 'left',
       sortable: true,
@@ -43,15 +44,17 @@
       paginationPreText: 'Anterior',
       paginationNextText: 'Siguiente',
       paginationVAlign: "both",
-      //paginationParts: ["pageInfo", "pageInfoShort", "pageSize", "pageList"],
       paginationParts: ["pageInfo", "pageList"],
       onLoadSuccess: (number, size) => {
-        console.log('hola')
+        $(".progress").hide();
+        $(".bootstrap-table").show()
       },
       onPageChange: (number, size) => {
         window.scrollTo(0, 0)
       },
     });
+
+    $(".bootstrap-table").hide()
   });
 </script>
 {% endblock %}
