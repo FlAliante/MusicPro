@@ -1,15 +1,9 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, DECIMAL, ForeignKey
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 from config import Base
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from datetime import datetime
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-
-from sqlalchemy import Column, Integer, String, DateTime
-from datetime import datetime
-from sqlalchemy.ext.declarative import declarative_base
 
 class TipoProducto(Base):
     __tablename__ = 'tipo_producto'
@@ -31,10 +25,6 @@ class TipoProducto(Base):
             #"fecha_actualizacion": self.fecha_actualizacion,
         }
 
-from sqlalchemy import Column, Integer, String, DECIMAL, DateTime, ForeignKey
-from datetime import datetime
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
 class Producto(Base):
     __tablename__ = 'producto'
