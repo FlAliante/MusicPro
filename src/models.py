@@ -2,93 +2,62 @@ from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
 from config import Base
 
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from datetime import datetime
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
 
-class Product(Base):
-    __tablename__ = 'product'
+from sqlalchemy import Column, Integer, String, DateTime
+from datetime import datetime
+from sqlalchemy.ext.declarative import declarative_base
 
-    id = Column(Integer, primary_key=True)
-    description = Column(String(255))
-    create_time = Column(DateTime)
-    update_time = Column(DateTime) 
-    price = Column(Integer)
-    photo = Column(String(2000))
-    url_nintendo = Column(String(500))
-
-    def __init__(self, description, create_time, update_time, price, photo, url_nintendo):
-        self.description = description
-        self.create_time = create_time
-        self.update_time = update_time
-        self.price = price
-        self.photo = photo
-        self.url_nintendo = url_nintendo
-    
-    def to_json(self):
-        return {
-            "id": self.id,
-            "description": self.description,
-            "create_time": str(self.create_time),
-            "update_time": str(self.update_time),
-            "price": self.price,
-            "photo": self.photo,
-            "url_nintendo": self.url_nintendo
-        }
-
-
-class AppProduct(Base):
-    __tablename__ = 'app_product'
-
-    id = Column(Integer, primary_key=True)
-    create_time = Column(DateTime, default=datetime.utcnow)
-    update_time = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    content = Column(String(255))
-    codigo_barra = Column(String(255))
-    nombre = Column(String(255))
-    telefono_contacto = Column(String(255))
-    nombre_proveedor = Column(String(255))
-    descripcion = Column(String(255))
-
-    def __init__(self, create_time, update_time, content, codigo_barra, nombre, telefono_contacto, nombre_proveedor, descripcion):
-        self.create_time = create_time
-        self.update_time = update_time
-        self.content = content
-        self.codigo_barra = codigo_barra
-        self.nombre = nombre
-        self.telefono_contacto = telefono_contacto
-        self.nombre_proveedor = nombre_proveedor
-        self.descripcion = descripcion
-
-    def to_json(self):
-        return {
-            "id": self.id,
-            "create_time": str(self.create_time),
-            "update_time": str(self.update_time),
-            "content": self.content,
-            "codigo_barra": self.codigo_barra,
-            "nombre": self.nombre,
-            "telefono_contacto": self.telefono_contacto,
-            "nombre_proveedor": self.nombre_proveedor,
-            "descripcion": self.descripcion
-        }
-
-
-class User(Base):
-    __tablename__ = 'app_user'
+class TipoProducto(Base):
+    __tablename__ = 'tipo_producto'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String(255))
-    email = Column(String(255))
-    password = Column(String(255))
+    nombre = Column(String(50), nullable=False)
+    fecha_creacion = Column(DateTime, default=datetime.utcnow, nullable=False)
+    fecha_actualizacion = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    def __init__(self, username, email, password):
-        self.username = username
-        self.email = email
-        self.password = password
+    def __init__(self, nombre, categoria):
+        self.nombre = nombre
+        self.categoria = categoria
 
-    def to_json(self):
+    def to_dict(self):
         return {
-            'id': self.id,
-            'username': self.username,
-            'email': self.email,
-            'password': self.password
+            "id": self.id,
+            "nombre": self.nombre,
+            #"fecha_creacion": self.fecha_creacion,
+            #"fecha_actualizacion": self.fecha_actualizacion,
         }
 
+from sqlalchemy import Column, Integer, String, DECIMAL, DateTime, ForeignKey
+from datetime import datetime
+from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declarative_base
+
+class Producto(Base):
+    __tablename__ = 'producto'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(50), nullable=False)
+    precio = Column(DECIMAL(10, 2), nullable=False)
+    fecha_creacion = Column(DateTime, default=datetime.utcnow, nullable=False)
+    fecha_actualizacion = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    #tipo_producto_id = Column(Integer, ForeignKey('tipo_producto.id'), nullable=False)
+    #tipo_producto = relationship("TipoProducto", back_populates="productos")
+
+    def __init__(self, nombre, precio, tipo_producto):
+        self.nombre = nombre
+        self.precio = precio
+        self.tipo_producto = tipo_producto
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "precio": str(self.precio),
+            "fecha_creacion": self.fecha_creacion,
+            "fecha_actualizacion": self.fecha_actualizacion,
+            "tipo_producto_id": self.tipo_producto_id
+        }
