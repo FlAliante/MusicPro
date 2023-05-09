@@ -24,7 +24,7 @@ elementos = [
     }
 ]
 
-
+@app.route('/', methods=['GET'])
 @app.route('/productos', methods=['GET'])
 def get_productos():
     try:
