@@ -1,32 +1,65 @@
-from flask import Flask, render_template
-# from .views.administrador import view_administrador
-from .views.bodeguero import view_bodeguero
-from .views.cliente import view_cliente
-# from .views.contador import view_contador
-from .views.demo import view_demo
-# from .views.vendedor import view_vendedor
-
+from flask import Flask, jsonify, request, abort
 
 app = Flask(__name__)
 
-# app.register_blueprint(view_administrador)
-app.register_blueprint(view_bodeguero)
-app.register_blueprint(view_cliente)
-# app.register_blueprint(view_contador)
-app.register_blueprint(view_demo)
-# app.register_blueprint(view_vendedor)
+elementos = [
+    {
+        'id': 1,
+        'nombre': 'Elemento 1',
+        'descripcion': 'Este es el elemento 1'
+    },
+    {
+        'id': 2,
+        'nombre': 'Elemento 2',
+        'descripcion': 'Este es el elemento 2'
+    }
+]
+
+@app.route('/elementos', methods=['GET'])
+def obtener_elementos():
+    return jsonify({'elementos': elementos})
 
 
-@app.route("/")
-@app.route("/index.html")
-def index():
-    return render_template("index.html")
+@app.route('/elementos/<int:id>', methods=['GET'])
+def obtener_elemento(id):
+    elemento = [elemento for elemento in elementos if elemento['id'] == id]
+    if len(elemento) == 0:
+        abort(404)
+    return jsonify({'elemento': elemento[0]})
 
 
-""" @app.errorhandler(500)
-def page_internal_error(e):
-    return render_template("pages-error-404.html")
+@app.route('/elementos', methods=['POST'])
+def agregar_elemento():
+    if not request.json or not 'nombre' in request.json:
+        abort(400)
+    elemento = {
+        'id': elementos[-1]['id'] + 1,
+        'nombre': request.json['nombre'],
+        'descripcion': request.json.get('descripcion', "")
+    }
+    elementos.append(elemento)
+    return jsonify({'elemento': elemento}), 201
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template("pages-error-404.html") """
+
+@app.route('/elementos/<int:id>', methods=['PUT'])
+def actualizar_elemento(id):
+    elemento = [elemento for elemento in elementos if elemento['id'] == id]
+    if len(elemento) == 0:
+        abort(404)
+    if not request.json:
+        abort(400)
+    elemento[0]['nombre'] = request.json.get('nombre', elemento[0]['nombre'])
+    elemento[0]['descripcion'] = request.json.get('descripcion', elemento[0]['descripcion'])
+    return jsonify({'elemento': elemento[0]})
+
+@app.route('/elementos/<int:id>', methods=['DELETE'])
+def delete_task(id):
+    elemento = [elemento for elemento in elementos if elemento['id'] == id]
+    if len(elemento) == 0:
+        abort(404)
+    elementos.remove(elemento[0])
+    return jsonify({'result': True})
+
+
+
+
