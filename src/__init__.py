@@ -1,6 +1,15 @@
-from flask import Flask, jsonify, request, abort
+from flask import Flask, abort
+from flask import Blueprint, jsonify, make_response, render_template, request
+import json
+from config import db_session
+from sqlalchemy import asc, desc
+from src.models import Product
+from .views.cliente import view_cliente
+
+
 
 app = Flask(__name__)
+#app.register_blueprint(view_cliente)
 
 elementos = [
     {
@@ -15,9 +24,58 @@ elementos = [
     }
 ]
 
+
+@app.route('/productos', methods=['GET'])
+def get_productos():
+    try:
+        products = Product.query.all()
+        serialized_list = []
+        for product in products:
+            serialized_product = {
+                "id": product.id,
+                "description": product.description,
+                "create_time": str(product.create_time),
+                "update_time": str(product.update_time),
+                "price": product.price,
+                "photo": product.photo,
+                "url_nintendo": product.url_nintendo,
+            }
+
+            serialized_list.append(serialized_product)
+        return jsonify(serialized_list)
+
+    except Exception as e:
+        print(str(e))
+        return make_response(str(e), 500)
+    finally:
+        # siempre cerrar la sesión, independientemente del resultado
+        db_session.close_all()
+
 @app.route('/elementos', methods=['GET'])
 def obtener_elementos():
-    return jsonify({'elementos': elementos})
+    try:
+        products = Product.query.all()
+        serialized_list = []
+        for product in products:
+            serialized_product = {
+                "id": product.id,
+                "description": product.description,
+                "create_time": str(product.create_time),
+                "update_time": str(product.update_time),
+                "price": product.price,
+                "photo": product.photo,
+                "url_nintendo": product.url_nintendo,
+            }
+
+            serialized_list.append(serialized_product)
+        return jsonify(serialized_list)
+
+    except Exception as e:
+        print(str(e))
+        return make_response(str(e), 500)
+    finally:
+        # siempre cerrar la sesión, independientemente del resultado
+        db_session.close_all()
 
 
 @app.route('/elementos/<int:id>', methods=['GET'])
