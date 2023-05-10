@@ -10,20 +10,20 @@ view_cliente = Blueprint("view_cliente", __name__)
 
 @view_cliente.route("/guitarras.html")
 def guitarras():
-    return render_template("cliente/guitarras.html")
+    return render_template("productos/guitarras.html")
 
 @view_cliente.route("/bateria_acustica.html")
 def bateria_acustica():
-    return render_template("cliente/bateria_acustica.html")
+    return render_template("productos/bateria_acustica.html")
 
 
 @view_cliente.route("/bateria_electronica.html")
 def bateria_electronica():
-    return render_template("cliente/bateria_electronica.html")
+    return render_template("productos/bateria_electronica.html")
 
 @view_cliente.route("/bajos.html")
 def bajos():
-    return render_template("cliente/bajos.html")
+    return render_template("productos/bajos.html")
 
 @view_cliente.route("/pianos.html")
 def pianos():
