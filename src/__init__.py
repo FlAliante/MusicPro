@@ -1,20 +1,23 @@
 from flask import Flask, render_template
-# from .views.administrador import view_administrador
-from .views.bodeguero import view_bodeguero
-from .views.productos import view_cliente
-# from .views.contador import view_contador
-from .views.demo import view_demo
-# from .views.vendedor import view_vendedor
+#instrumentos_de_cuerda
+from .views.instrumentos_de_cuerda.bajos import view_bajos
+from .views.instrumentos_de_cuerda.guitarras import view_guitarras
+from .views.instrumentos_de_cuerda.pianos import view_pianos
+
+
+#from .views.percusión import bateria_acustica, bateria_electronica
 
 
 app = Flask(__name__)
 
-# app.register_blueprint(view_administrador)
-app.register_blueprint(view_bodeguero)
-app.register_blueprint(view_cliente)
-# app.register_blueprint(view_contador)
-app.register_blueprint(view_demo)
-# app.register_blueprint(view_vendedor)
+#instrumentos_de_cuerda
+app.register_blueprint(view_bajos)
+app.register_blueprint(view_guitarras)
+app.register_blueprint(view_pianos)
+
+#percusión
+#app.register_blueprint(bateria_acustica)
+#app.register_blueprint(bateria_electronica)
 
 
 @app.route("/")
@@ -26,6 +29,7 @@ def index():
 """ @app.errorhandler(500)
 def page_internal_error(e):
     return render_template("pages-error-404.html")
+
 
 @app.errorhandler(404)
 def page_not_found(e):
