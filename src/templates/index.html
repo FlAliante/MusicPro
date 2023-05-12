@@ -6,54 +6,68 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 -->
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>
-      Smart Shop a Ecommerce Online Shopping Category Flat Bootstrap Responsive
-      Website Template | Home :: w3layouts
-    </title>
-    <!-- for-mobile-apps -->
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta
-      name="keywords"
-      content="Smart Shop Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design"
-    />
 
-    <!--  CSS  -->
-    {% include "web_page/css.html" %}
+<head>
+  <title>
+    Smart Shop a Ecommerce Online Shopping Category Flat Bootstrap Responsive
+    Website Template | Home :: w3layouts
+  </title>
+  <!-- for-mobile-apps -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="keywords"
+    content="Smart Shop Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
 
-    <!-- Specific Page CSS goes HERE  -->
-    {% block stylesheets %}{% endblock %}
+  <!--  CSS  -->
+  {% include "web_page/css.html" %}
+  <style>
+    .bg-custom {
+      background-color: #fda30e;
+    }
+  </style>
+  
+  <!-- Specific Page CSS goes HERE  -->
+  {% block stylesheets %}{% endblock %}
 
-    <!--  JS  -->
-    {% include "web_page/js.html" %}
-  </head>
-  <body>
-    <!-- header -->
-    {% include "web_page/header.html" %}
-    <!-- //header -->
+  <!--  JS  -->
+  {% include "web_page/js.html" %}
+</head>
 
-    <!-- banner -->
-    {% include "web_page/menu.html" %}
-    <!-- //banner -->
+<body>
+  <!-- header -->
+  {% include "web_page/header.html" %}
+  <!-- //header -->
 
-    <!-- content -->
-    {% include "web_page/content.html" %}
-    <!-- //content -->
+  <!-- banner -->
+  {% include "web_page/menu.html" %}
+  <!-- //banner -->
 
-    <!-- coupons -->
-    {% include "web_page/coupons.html" %}
-    <!-- //coupons -->
+  <!-- content -->
+  {% include "web_page/content.html" %}
+  <!-- //content -->
 
-    <!-- footer -->
-    {% include "web_page/footer.html" %}
-    <!-- //footer -->
+  <!-- productos -->
+  {% include "web_page/productos.html" %}
+  <!-- //productos -->
 
-    <!-- login -->
-    {% include "web_page/login.html" %}
-    <!-- //login -->
+  <!-- coupons -->
+  {% include "web_page/coupons.html" %}
+  <!-- //coupons -->
 
-    <!-- Specific Page JS goes HERE  -->
-    {% block javascripts %}{% endblock %}
-  </body>
+  <!-- footer -->
+  {% include "web_page/footer.html" %}
+  <!-- //footer -->
+
+  <!-- login -->
+  {% include "web_page/login.html" %}
+  <!-- //login -->
+
+  <script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table-locale-all.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-table@1.21.3/dist/extensions/custom-view/bootstrap-table-custom-view.js"></script>
+  <!-- Specific Page JS goes HERE  -->
+  {% block javascripts %}{% endblock %}
+
+</body>
+
 </html>

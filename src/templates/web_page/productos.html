@@ -1,49 +1,97 @@
-{% extends "client.html" %}
+<div class="product-easy">
+  <div class="container">
 
-{% block stylesheets %}{% endblock %}
+    <!-- title -->
+    <!-- <center>
+  <div class="products-right">
+    <h5 class="mb-1">Pro</h5>
+  </div>
+</center> -->
+    <!-- //title -->
 
-{% block content %}
-<div style="margin-block: 18px;" class="container">
-  <table id="myTable"></table>
-</div>
-{% endblock %}
+    <!-- progress -->
+    <div class='progress' style="margin-top: 15px;">
+      <div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
+    </div>
+    <!-- //progress -->
 
-{% block javascripts %}
-<script>
-  $(function () {
-    $('#myTable').bootstrapTable({
-      url: '/list_products',
-      loadingFontSize: "14px",
-      pagination: true,
-      pageSize: 10,
-      locale: 'es-CL',
-      sidePagination: 'server',
-      buttonsAlign: 'left',
-      searchAlign: 'left',
-      paginationPreText: 'Anterior',
-      paginationNextText: 'Siguiente',
-      sortable: true,
-      sortName: 'price',
-      sortOrder: 'asc',
-      search: true,
-      paginationVAlign: "both",
-      toolbar: ".toolbar",
-      //paginationParts: ["pageInfo", "pageInfoShort", "pageSize", "pageList"],
-      paginationParts: ["pageInfoShort", "pageList"],
-      columns: [
-        { field: 'description', sortable: true, title: 'Description' },
-        { field: 'create_time', sortable: true, title: 'Create Time' },
-        { field: 'update_time', sortable: true, title: 'Update Time' },
-        { field: 'price', sortable: true, title: 'Price' },
-        { field: 'photo', sortable: false, title: 'Photo' },
-        { field: 'url_nintendo', sortable: false, title: 'Url Nintendo' }
-      ],
-      onPageChange: (number, size) => {
-        //$(".fixed-table-container, .fixed-table-pagination").hide();
-        //$("#cargandoDatos").show()
-        window.scrollTo(0, 0)
-      },
-    });
-  });
-</script>
-{% endblock %}
+    <!-- myTable -->
+    <table id="myTable"></table>
+    <template id="profileTemplate">
+      <div class="col-md-3 product-men mb-3" style="margin-bottom: 15px;">
+        <div class="men-pro-item simpleCart_shelfItem">
+          <div class="men-thumb-item">
+            <img src="static/images/piano.png" alt="" class="pro-image-front" />
+            <img src="static/images/piano.png" alt="" class="pro-image-back" />
+            <div class="men-cart-pro">
+              <div class="inner-men-cart-pro">
+                <a href="single.html" class="link-product-add-cart">Ver Producto</a>
+              </div>
+            </div>
+            <span class="product-new-top">New</span>
+          </div>
+          <div class="item-info-product">
+            <h4><a href="single.html" title="%description%">%description_sort%</a></h4>
+            <div class="info-product-price">
+              <span class="item_price">$45.99</span>
+              <del>$69.71</del>
+            </div>
+            <a href="#" class="item_add single-item hvr-outline-out button2">Agregar al Carrito</a>
+          </div>
+        </div>
+      </div>
+    </template>
+    <!-- //myTable -->
+  </div>
+  <br><br>
+
+  <script>
+    $(function () {
+      $("#myTable").bootstrapTable({
+        url: '/get_productos',
+        columns: [
+          { field: 'description', sortable: true, title: 'Description' },
+          { field: 'create_time', sortable: true, title: 'Create Time' },
+          { field: 'update_time', sortable: true, title: 'Update Time' },
+          { field: 'price', sortable: true, title: 'Price' },
+          { field: 'photo', sortable: false, title: 'Photo' },
+          { field: 'url_nintendo', sortable: false, title: 'Url Nintendo' }
+        ],
+        showCustomView: true,
+        customView: (data) => {
+          // Agregamos el HTML para cargar los datos
+          var view = "";
+          var template = $("#profileTemplate").html();
+          var description_sort = "";
+          $.each(data, function (i, row) {
+            if (row.description.length > 15) {
+              description_sort = row.description.substring(0, 15) + "...";
+            }
+            view += template
+              .replace("%description%", row.description)
+              .replace("%description_sort%", description_sort)
+              .replace("%photo%", row.photo)
+              .replace("%photo_front%", row.photo)
+              .replace("%photo_back%", row.photo)
+          });
+          return `<div class="row">${view}</div>`;
+        },
+        loadingFontSize: "14px",
+        locale: 'es-CL',
+        //buttonsAlign: 'left',,
+        sortable: true,
+        //paginationParts: ["pageInfo", "pageInfoShort", "pageSize", "pageList"],
+        paginationParts: ["pageInfo", "pageList"],
+        onLoadSuccess: (number, size) => {
+          $(".progress").hide();
+          $(".search-input").show()
+        },
+        onPageChange: (number, size) => {
+          window.scrollTo(0, 0)
+        },
+      });
+
+      $(".fixed-table-body, .search-input").hide()
+      $("[name='customView']").click().remove();
+    })
+  </script>

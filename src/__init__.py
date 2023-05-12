@@ -3,12 +3,17 @@ from flask import Flask, render_template
 from .views.instrumentos_de_cuerda.bajos import view_bajos
 from .views.instrumentos_de_cuerda.guitarras import view_guitarras
 from .views.instrumentos_de_cuerda.pianos import view_pianos
-
+#percusión
+from .views.percusion.bateria_acustica import view_bateria_acustica
+from .views.percusion.bateria_electronica import view_bateria_electronica
+#carrito
+from .views.carrito.checkout import view_carrito
+#index
 from .views.web_page.productos import view_productos
-#from .views.percusión import bateria_acustica, bateria_electronica
 
 
 app = Flask(__name__)
+
 
 #instrumentos_de_cuerda
 app.register_blueprint(view_bajos)
@@ -16,9 +21,13 @@ app.register_blueprint(view_guitarras)
 app.register_blueprint(view_pianos)
 
 #percusión
-#app.register_blueprint(bateria_acustica)
-#app.register_blueprint(bateria_electronica)
+app.register_blueprint(view_bateria_acustica)
+app.register_blueprint(view_bateria_electronica)
 
+#carrito
+app.register_blueprint(view_carrito)
+
+#index
 app.register_blueprint(view_productos)
 
 
