@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, String, DateTime, DECIMAL, ForeignKey
 #from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 from config import Base
+from sqlalchemy.orm import relationship
 
 
 class TipoProducto(Base):
@@ -34,8 +35,7 @@ class Producto(Base):
     precio = Column(DECIMAL(10, 2), nullable=False)
     fecha_creacion = Column(DateTime, default=datetime.utcnow, nullable=False)
     fecha_actualizacion = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    #tipo_producto_id = Column(Integer, ForeignKey('tipo_producto.id'), nullable=False)
-    #tipo_producto = relationship("TipoProducto", back_populates="productos")
+    tipo_producto = Column(Integer, nullable=False)
 
     def __init__(self, nombre, precio, tipo_producto):
         self.nombre = nombre
