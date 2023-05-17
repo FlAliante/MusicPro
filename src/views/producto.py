@@ -7,8 +7,8 @@ from src.models import TipoProducto, Producto
 #from .views.producto import view_cliente
 import requests
 
-
 view_producto = Blueprint("view_producto", __name__)
+
 # Api Producto https://music-pro-api.herokuapp.com/productos?tipo_producto=1 -> te devuelve guitarras
 @view_producto.route('/productos', methods=['GET'])
 def get_productos():
@@ -21,16 +21,18 @@ def get_productos():
         serialized_list = []
         for producto in productos:
             serialized_producto = {
-                "Serie del producto": "EC-256",
-                "marca": "LTD",
-                "código": "LTD-4943",
+                "Serie del producto": "EC-" + str(Producto.random_integer(100, 999)),
+                "marca": Producto.random_letters(3),
+                "código": f"{Producto.random_letters(3)}-{Producto.random_integer(1000, 9999)}",
+                "id": producto.id,
                 "nombre": producto.nombre,
+                "photo": producto.photo,
                 "serie": [
                     {
                         "fecha": producto.fecha_creacion,
                         "valor": producto.precio
                     }
-                ]
+                ],
             }
             serialized_list.append(serialized_producto)
         return jsonify(serialized_list)
