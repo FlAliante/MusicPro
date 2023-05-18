@@ -55,7 +55,7 @@
 <script>
   $(function () {
     $("#myTable").bootstrapTable({
-      url: '/get_productos/4',
+      url: '/get_productos/14',
       locale: 'es-CL',
       search: true,
       searchAlign: 'left',
@@ -73,8 +73,8 @@
         var formatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", })
         // Recorremos datos
         $.each(data, function (i, row) {
-          if (row.description.length > 40) {
-            description_sort = row.description.substring(0, 40) + "..."
+          if (row.description.length > 30) {
+            description_sort = row.description.substring(0, 24) + "..."
           } else {
             description_sort = row.description
           }
