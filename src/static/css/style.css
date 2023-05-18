@@ -1386,7 +1386,7 @@ h2.resp-accordion {
     transform: rotateY(0deg);
     opacity: 1;
     visibility: visible;
-    background: #f7f7f7;
+    /* background: #f7f7f7; */
 }
 .men-thumb-item img {
     transition: all 0.5s ease-out 0s;
