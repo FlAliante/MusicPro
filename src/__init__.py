@@ -9,15 +9,9 @@ import requests
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
-
-# rest of your code...
-
-
-app = Flask(__name__)
 app.register_blueprint(view_producto)
 
-
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Converidor de Moneda https://music-pro-api.herokuapp.com/amount_clp=1000
 @app.route('/api/exchange_rate', methods=['GET'])
@@ -42,5 +36,3 @@ def exchange_rate():
         return make_response({'status': 500, 'error': str(e)}, 500)
     finally:
         db_session.close_all()
-
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
