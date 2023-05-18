@@ -1,16 +1,12 @@
 {% extends "inner_page.html" %}
 
-{% block stylesheets %}
-
-{% endblock %}
-
 {% block content %}
 <!-- check out -->
 <div class="checkout">
 	<div class="container">
 		<h3>My Shopping Bag</h3>
 		<div class="table-responsive checkout-right animated wow slideInUp" data-wow-delay=".5s">
-			<table class="timetable_sub">
+			<table id="tabla" class="timetable_sub">
 				<thead>
 					<tr>
 						<th>Remove</th>
@@ -20,224 +16,98 @@
 						<th>Price</th>
 					</tr>
 				</thead>
-				<tr class="rem1">
-					<td class="invert-closeb">
-						<div class="rem">
-							<div class="close1"> </div>
-						</div>
-						<script>$(document).ready(function (c) {
-								$('.close1').on('click', function (c) {
-									$('.rem1').fadeOut('slow', function (c) {
-										$('.rem1').remove();
-									});
-								});
-							});
-						</script>
-					</td>
-					<td class="invert-image"><a href="single.html"><img src="static/images/w4.png" alt=" "
-								class="img-responsive" /></a></td>
-					<td class="invert">
-						<div class="quantity">
-							<div class="quantity-select">
-								<div class="entry value-minus">&nbsp;</div>
-								<div class="entry value"><span>1</span></div>
-								<div class="entry value-plus active">&nbsp;</div>
-							</div>
-						</div>
-					</td>
-					<td class="invert">Hand Bag</td>
-					<td class="invert">$45.99</td>
-				</tr>
-				<tr class="rem2">
-					<td class="invert-closeb">
-						<div class="rem">
-							<div class="close2"> </div>
-						</div>
-						<script>$(document).ready(function (c) {
-								$('.close2').on('click', function (c) {
-									$('.rem2').fadeOut('slow', function (c) {
-										$('.rem2').remove();
-									});
-								});
-							});
-						</script>
-					</td>
-					<td class="invert-image"><a href="single.html"><img src="static/images/ep3.png" alt=" "
-								class="img-responsive" /></a></td>
-					<td class="invert">
-						<div class="quantity">
-							<div class="quantity-select">
-								<div class="entry value-minus">&nbsp;</div>
-								<div class="entry value"><span>1</span></div>
-								<div class="entry value-plus active">&nbsp;</div>
-							</div>
-						</div>
-					</td>
-					<td class="invert">Watches</td>
-					<td class="invert">$45.99</td>
-
-				</tr>
-				<tr class="rem3">
-					<td class="invert-closeb">
-						<div class="rem">
-							<div class="close3"> </div>
-						</div>
-						<script>$(document).ready(function (c) {
-								$('.close3').on('click', function (c) {
-									$('.rem3').fadeOut('slow', function (c) {
-										$('.rem3').remove();
-									});
-								});
-							});
-						</script>
-					</td>
-					<td class="invert-image"><a href="single.html"><img src="static/images/w2.png" alt=" "
-								class="img-responsive" /></a></td>
-					<td class="invert">
-						<div class="quantity">
-							<div class="quantity-select">
-								<div class="entry value-minus">&nbsp;</div>
-								<div class="entry value"><span>1</span></div>
-								<div class="entry value-plus active">&nbsp;</div>
-							</div>
-						</div>
-					</td>
-					<td class="invert">Sandals</td>
-					<td class="invert">$45.99</td>
-
-				</tr>
-				<tr class="rem4">
-					<td class="invert-closeb">
-						<div class="rem">
-							<div class="close4"> </div>
-						</div>
-						<script>$(document).ready(function (c) {
-								$('.close4').on('click', function (c) {
-									$('.rem4').fadeOut('slow', function (c) {
-										$('.rem4').remove();
-									});
-								});
-							});
-						</script>
-					</td>
-					<td class="invert-image"><a href="single.html"><img src="static/images/w1.png" alt=" "
-								class="img-responsive" /></a></td>
-					<td class="invert">
-						<div class="quantity">
-							<div class="quantity-select">
-								<div class="entry value-minus">&nbsp;</div>
-								<div class="entry value"><span>1</span></div>
-								<div class="entry value-plus active">&nbsp;</div>
-							</div>
-						</div>
-					</td>
-					<td class="invert">Wedges</td>
-					<td class="invert">$45.99</td>
-
-				</tr>
-
-				<!--quantity-->
-				<script>
-					$('.value-plus').on('click', function () {
-						var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) + 1;
-						divUpd.text(newVal);
-					});
-
-					$('.value-minus').on('click', function () {
-						var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) - 1;
-						if (newVal >= 1) divUpd.text(newVal);
-					});
-				</script>
-				<!--quantity-->
 			</table>
+			<template id="miNuevoElemento">
+				<tr>
+					<td>
+						<center>
+							<span style="cursor: pointer;">Eliminar</span>
+						</center>
+					</td>
+					<td class="invert-image" style="width: 300px;">
+						<a href="#"><img src="%photo%" alt="%description%" class="img-responsive" /></a>
+					</td>
+					<td class="invert">
+						<div class="quantity">
+							<div class="quantity-select">
+								<div class="entry value-minus">&nbsp;</div>
+								<div class="entry value"><span>1</span></div>
+								<div class="entry value-plus active">&nbsp;</div>
+							</div>
+						</div>
+					</td>
+					<td class="invert">%description%</td>
+					<td class="invert">%format%</td>
+				</tr>
+			</template>
 		</div>
-		<div class="checkout-left">
 
-			<div class="checkout-right-basket animated wow slideInRight" data-wow-delay=".5s">
-				<a href="mens.html"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Back To
-					Shopping</a>
+		<div class="checkout-left">
+			<div class="checkout-left-basket animated wow slideInLeft" style="margin-left: 10px; cursor:pointer">
+				<h4>Pagar: <span id="tarifa"></span></li></h4>
 			</div>
-			<div class="checkout-left-basket animated wow slideInLeft" data-wow-delay=".5s">
-				<h4>Shopping basket</h4>
-				<ul>
-					<li>Hand Bag <i>-</i> <span>$45.99</span></li>
-					<li>Watches <i>-</i> <span>$45.99</span></li>
-					<li>Sandals <i>-</i> <span>$45.99</span></li>
-					<li>Wedges <i>-</i> <span>$45.99</span></li>
-					<li>Total <i>-</i> <span>$183.96</span></li>
-				</ul>
+
+			<!-- <div class="checkout-left-basket animated wow slideInLeft" style="margin-left: 10px; cursor:pointer">
+				<h4>Pagar</h4>
+			</div> -->
+
+			<div class="checkout-left-basket animated wow slideInLeft" style="margin-left: 10px; cursor:pointer">
+				<h4 style="background: black;">Transformar a Dolar</li></h4>
 			</div>
-			<div class="clearfix"> </div>
 		</div>
+
 	</div>
 </div>
 <hr>
-<br>
-<br>
 <!-- //check out -->
-<!-- //product-nav -->
-
-
 {% endblock %}
 
 {% block javascripts %}
-<script
-	src="https://unpkg.com/bootstrap-table@1.21.3/dist/extensions/custom-view/bootstrap-table-custom-view.js"></script>
+
+<!--quantity-->
+<script>
+	$('.value-plus').on('click', function () {
+		var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) + 1;
+		divUpd.text(newVal);
+	});
+
+	$('.value-minus').on('click', function () {
+		var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) - 1;
+		if (newVal >= 1) divUpd.text(newVal);
+	});
+</script>
+<!--quantity-->
+
 <script>
 	$(function () {
-		$("#myTable").bootstrapTable({
-			url: '/portfolio/list',
-			columns: [
-				{ field: 'description', sortable: true, title: 'Description' },
-				{ field: 'create_time', sortable: true, title: 'Create Time' },
-				{ field: 'update_time', sortable: true, title: 'Update Time' },
-				{ field: 'price', sortable: true, title: 'Price' },
-				{ field: 'photo', sortable: false, title: 'Photo' },
-				{ field: 'url_nintendo', sortable: false, title: 'Url Nintendo' }
-			],
-			showCustomView: true,
-			customView: (data) => {
-				// Agregamos el HTML para cargar los datos
-				var view = "";
-				var template = $("#profileTemplate").html();
-				var description_sort = "";
-				$.each(data, function (i, row) {
-					if (row.description.length > 15) {
-						description_sort = row.description.substring(0, 15) + "...";
-					}
-					view += template
-						.replace("%description%", row.description)
-						.replace("%description_sort%", description_sort)
-						.replace("%photo%", row.photo)
-						.replace("%photo_front%", row.photo)
-						.replace("%photo_back%", row.photo)
-				});
-				return `<div class="row">${view}</div>`;
-			},
-			loadingFontSize: "14px",
-			locale: 'es-CL',
-			//buttonsAlign: 'left',
-			search: true,
-			searchAlign: 'left',
-			sortable: true,
-			pageSize: 8,
-			pagination: true,
-			paginationPreText: 'Anterior',
-			paginationNextText: 'Siguiente',
-			paginationVAlign: "both",
-			//paginationParts: ["pageInfo", "pageInfoShort", "pageSize", "pageList"],
-			paginationParts: ["pageInfo", "pageList"],
-			onLoadSuccess: (number, size) => {
-				$(".progress").hide();
-				$(".search-input").show()
-			},
-			onPageChange: (number, size) => {
-				window.scrollTo(0, 0)
-			},
+		// Parsear el string JSON a un objeto JavaScript
+		var productos = JSON.parse(compra_productos);
+
+		// Seleccionar la tabla por su clase (en este caso, se usa la clase "table")
+		var tabla = $('#tabla');
+		var html = '';
+		// Iterar sobre los elementos del array con forEach()
+		productos.forEach(function (producto, indice) {
+			var description_sort = ''
+
+			if (producto.description.length > 15) {
+				description_sort = producto.description.substring(0, 15) + "..."
+			} else {
+				description_sort = producto.description
+			}
+
+			$('#listaTotal').append(`<li>${description_sort}<i>-</i> <span>${producto.format}</span></li>`);
+
+			indice++
+			html = $('#miNuevoElemento').html()
+				.replaceAll('%format%', producto.format)
+				.replaceAll('%description%', producto.description)
+				.replaceAll('%photo%', producto.photo)
+			tabla.append(html);
 		});
 
-		$(".fixed-table-body, .search-input").hide()
-		$("[name='customView']").click().remove();
+		$('#listaTotal').append('<li>Total <i>-</i> <span id="tarifa">$183.96</span></li>');
+		$('#tarifa').text($('#compra_total').text())
 	})
 </script>
 {% endblock %}

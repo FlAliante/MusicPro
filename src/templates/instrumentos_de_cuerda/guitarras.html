@@ -5,10 +5,18 @@
 {% endblock %}
 
 {% block content %}
+<div id="numero_asignado"></div>
+
 <!-- title -->
-<div class="products-right">
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-dark text-white">
+    <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Guitarras</li>
+  </ol>
+</nav>
+<!-- <div class="products-right">
   <h5 class="mb-1">Guitarras</h5>
-</div>
+</div> -->
 <!-- //title -->
 
 <!-- progress -->
@@ -40,7 +48,7 @@
           <span class="item_price">%price%
           </span>
         </div>
-        <a href="#" class="item_add single-item hvr-outline-out button2">Agregar al Carrito</a>
+        <a href="#" class="item_add single-item hvr-outline-out button2" onclick="agregarAlCarrito('%price%', '%description%', '%photo%')">Agregar al Carrito</a>
       </div>
     </div>
   </div>
@@ -79,12 +87,12 @@
             description_sort = row.description
           }
           view += template
-            .replace("%description%", row.description)
-            .replace("%description_sort%", description_sort)
-            .replace("%photo%", row.photo)
-            .replace("%photo_front%", row.photo)
-            .replace("%photo_back%", row.photo)
-            .replace("%price%", formatter.format(row.price))
+            .replaceAll("%description%", row.description)
+            .replaceAll("%description_sort%", description_sort)
+            .replaceAll("%photo%", row.photo)
+            .replaceAll("%photo_front%", row.photo)
+            .replaceAll("%photo_back%", row.photo)
+            .replaceAll("%price%", formatter.format(row.price))
         });
         // Retornamos un row con colum
         return `<div class="row">${view}</div>`;

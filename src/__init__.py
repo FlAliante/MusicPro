@@ -12,6 +12,6 @@ app = Flask(__name__)
 
 
 #Importamos BluePrint
-app.register_blueprint(view_demo)
+#app.register_blueprint(view_demo)
 app.register_blueprint(app_view)
 app.register_blueprint(app_controller)
