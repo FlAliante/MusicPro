@@ -2,9 +2,8 @@
 
 {% block content %}
 <!-- check out -->
-<div class="checkout">
+<div class="">
 	<div class="container">
-		<h3>My Shopping Bag</h3>
 		<div class="table-responsive checkout-right animated wow slideInUp" data-wow-delay=".5s">
 			<table id="tabla" class="timetable_sub">
 				<thead>
@@ -42,23 +41,29 @@
 			</template>
 		</div>
 
-		<div class="checkout-left">
+		<div id="carrito_msj" style="padding-top: 30px;">
+			<center>
+				<h3>Tu carrito esta vacio</h3>
+			</center>
+		</div>
+
+		<div id="carrito_pagar" style="display: none;" class="checkout-left">
 			<div class="checkout-left-basket animated wow slideInLeft" style="margin-left: 10px; cursor:pointer">
-				<h4>Pagar: <span id="tarifa"></span></li></h4>
+				<h4>Pagar: <span id="tarifa"></span></li>
+				</h4>
 			</div>
 
-			<!-- <div class="checkout-left-basket animated wow slideInLeft" style="margin-left: 10px; cursor:pointer">
-				<h4>Pagar</h4>
-			</div> -->
-
 			<div class="checkout-left-basket animated wow slideInLeft" style="margin-left: 10px; cursor:pointer">
-				<h4 style="background: black;">Transformar a Dolar</li></h4>
+				<h4 style="background: black;">Transformar a USD</li>
+				</h4>
 			</div>
 		</div>
 
 	</div>
 </div>
+
 <hr>
+
 <!-- //check out -->
 {% endblock %}
 
@@ -79,35 +84,37 @@
 <!--quantity-->
 
 <script>
+	$.ajax({
+		url: 'https://music-pro-api.herokuapp.com/exchange_rate',
+		data: { amount_clp: 7000 },
+		success: function (response) {
+			console.log(response);
+			// Haz algo con la respuesta...
+		},
+		error: function (jqXHR, status, errorThrown) {
+			console.error(errorThrown);
+		}
+	});
+
 	$(function () {
 		// Parsear el string JSON a un objeto JavaScript
 		var productos = JSON.parse(compra_productos);
-
-		// Seleccionar la tabla por su clase (en este caso, se usa la clase "table")
-		var tabla = $('#tabla');
-		var html = '';
-		// Iterar sobre los elementos del array con forEach()
-		productos.forEach(function (producto, indice) {
-			var description_sort = ''
-
-			if (producto.description.length > 15) {
-				description_sort = producto.description.substring(0, 15) + "..."
-			} else {
-				description_sort = producto.description
-			}
-
-			$('#listaTotal').append(`<li>${description_sort}<i>-</i> <span>${producto.format}</span></li>`);
-
-			indice++
-			html = $('#miNuevoElemento').html()
-				.replaceAll('%format%', producto.format)
-				.replaceAll('%description%', producto.description)
-				.replaceAll('%photo%', producto.photo)
-			tabla.append(html);
-		});
-
-		$('#listaTotal').append('<li>Total <i>-</i> <span id="tarifa">$183.96</span></li>');
-		$('#tarifa').text($('#compra_total').text())
+		if (productos.length > 0) {
+			$('#carrito_msj').hide();
+			// Seleccionar la tabla por su clase (en este caso, se usa la clase "table")
+			var tabla = $('#tabla');
+			var html = '';
+			// Iterar sobre los elementos del array con forEach()
+			productos.forEach(function (producto, indice) {
+				html = $('#miNuevoElemento').html()
+					.replaceAll('%format%', producto.format)
+					.replaceAll('%description%', producto.description)
+					.replaceAll('%photo%', producto.photo)
+				tabla.append(html);
+			});
+			$('#tarifa').text($('#compra_total').text())
+			$('#carrito_pagar').show();
+		}
 	})
 </script>
 {% endblock %}
