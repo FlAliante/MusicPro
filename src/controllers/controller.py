@@ -20,6 +20,7 @@ def get_productos():
                 "photo": result['photo'],
                 "precio": result['precio'],
                 "format_clp": result['format_clp'],
+                "marca": result['marca'],
             }
             serialized_list.append(serialized_product)
         return jsonify(serialized_list)
@@ -45,6 +46,7 @@ def get_productos_tipo_producto(tipo_producto):
                 "photo": result['photo'],
                 "precio": result['precio'],
                 "format_clp": result['format_clp'],
+                "marca": result['marca'],
             }
             serialized_list.append(serialized_product)
     else:

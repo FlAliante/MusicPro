@@ -56,17 +56,17 @@
         var nombre_sort = ""
         // Recorremos datos
         $.each(data, function (i, row) {
-          nombre_sort = row.nombre.length > 45 ? row.nombre.substring(0, 45) + "..." : row.nombre;
+          nombre_sort = row.nombre.length > 50 ? row.nombre.substring(0, 50) + "..." : row.nombre;
           view += template
             .replaceAll("%nombre_sort%", nombre_sort)
             .replaceAll("%nombre%", row.nombre)
             .replaceAll("%photo%", row.photo)
             .replaceAll("%precio%", row.precio)
             .replaceAll("%format_clp%", row.format_clp)
-
+            .replaceAll("%marca%", row.marca)
         });
         // Retornamos un row con colum
-        return `<div class="row">${view}</div>`;
+        return `<br><div class="row">${view}</div>`;
       }
     });
     $(".fixed-table-body, .search-input").hide()

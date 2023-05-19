@@ -20,11 +20,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
   <!--  CSS  -->
   {% include "resources/css.html" %}
-  <style>
-    .bg-custom {
-      background-color: #fda30e;
-    }
-  </style>
 
   <!-- Specific Page CSS goes HERE  -->
   {% block stylesheets %}{% endblock %}
@@ -46,7 +41,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   {% include "resources/content.html" %}
   <!-- //content -->
 
-  <div class="new_arrivals" style="padding-top: 0px;">
+  <div class="new_arrivals">
     <div class="container">
       <h3><span>new </span>arrivals</h3>
       <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium</p>
@@ -69,72 +64,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   {% include "resources/login.html" %}
   <!-- //login -->
 
-  <script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table.min.js"></script>
-  <script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table-locale-all.min.js"></script>
-  <script
-    src="https://unpkg.com/bootstrap-table@1.21.3/dist/extensions/custom-view/bootstrap-table-custom-view.js"></script>
   <!-- Specific Page JS goes HERE  -->
-  <script>
-    var compra_total = localStorage.getItem('compra_total');
-    var compra_item = localStorage.getItem('compra_item');
-    var compra_formato = localStorage.getItem('compra_formato');
-    var compra_productos = localStorage.getItem('compra_productos');
-    var formatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", })
-
-    $(function () {
-      // Si no hay un número previo en el almacenamiento local, establece el número inicial en 0
-      if (!compra_item) {
-        compra_total = 0;
-        compra_item = 0;
-        compra_productos = '[]'
-      }
-
-      $('#compra_total').text(formatter.format(compra_total))
-      $('#compra_item').text(compra_item)
-    });
-
-    function agregarAlCarrito(precio, description, photo) {
-      //parseo textos a numeros para sumar
-      precio = parseInt(precio);
-      compra_total = parseInt(compra_total);
-      //Recupero txt y parseo a json
-      compra_productos = JSON.parse(compra_productos);
-      // Incrementa el número actual en 1 cada vez que se llama esta función
-      compra_total += precio
-      compra_item++
-      // Crear un objeto para almacenar
-      var objeto = {
-        'precio': precio,
-        'description': description,
-        'photo': photo,
-        'format': formatter.format(precio),
-      }
-      //Adjunto datos 
-      compra_productos.push(objeto)
-      // Esto transforma a json tipo text. si no se guarda asi el array no se puede acceder despues
-      compra_productos = JSON.stringify(compra_productos)
-      // Escribe el nuevo número asignado en el almacenamiento local
-      localStorage.setItem('compra_total', compra_total);
-      localStorage.setItem('compra_item', compra_item);
-      localStorage.setItem('compra_productos', compra_productos);
-      // Actualiza el contenido del elemento HTML que muestra el número asignado
-      $('#compra_total').text(formatter.format(compra_total));
-      $('#compra_item').text(compra_item)
-    }
-
-    function limpiarCarrito() {
-      compra_total = 0;
-      compra_item = 0;
-      compra_productos = '[]'
-
-      localStorage.setItem('compra_total', compra_total);
-      localStorage.setItem('compra_item', compra_item);
-      localStorage.setItem('compra_productos', compra_productos);
-
-      $('#compra_total').text('$' + compra_total);
-      $('#compra_item').text(compra_item)
-    }
-  </script>
   {% block javascripts %}{% endblock %}
 </body>
 

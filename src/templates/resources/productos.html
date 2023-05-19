@@ -1,17 +1,15 @@
-<div class="">
-  <!-- progress -->
-  <div class='progress' style="margin-top: 45px;">
-    <div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
-  </div>
-  <!-- //progress -->
-
-  <!-- myTable -->
-  <table id="myTable"></table>
-  <template id="tableTemplate">
-    {% include "resources/card_table.html" %}
-  </template>
-  <!-- //myTable -->
+<!-- progress -->
+<div class='progress' style="margin-top: 45px;">
+  <div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
 </div>
+<!-- //progress -->
+
+<!-- myTable -->
+<table id="myTable"></table>
+<template id="tableTemplate">
+  {% include "resources/card_table.html" %}
+</template>
+<!-- //myTable -->
 
 <script>
   $(function () {
@@ -37,6 +35,7 @@
           view += template
             .replaceAll("%nombre_sort%", nombre_sort)
             .replaceAll("%nombre%", row.nombre)
+            .replaceAll("%marca%", row.marca)
             .replaceAll("%photo%", row.photo)
             .replaceAll("%precio%", row.precio)
             .replaceAll("%format_clp%", row.format_clp)
@@ -47,5 +46,12 @@
     });
     $(".fixed-table-body, .search-input").hide()
     $("[name='customView']").click().remove()
+
+    $("#myTable").animate({
+      left: "+=50px"
+    }, {
+      duration: 1000,
+      easing: "easeOutBounce"
+    });
   })
 </script>
