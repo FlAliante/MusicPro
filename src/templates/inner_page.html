@@ -54,6 +54,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
   <script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table.min.js"></script>
   <script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table-locale-all.min.js"></script>
+
+  <script
+    src="https://unpkg.com/bootstrap-table@1.21.3/dist/extensions/custom-view/bootstrap-table-custom-view.js"></script>
   <!-- Specific Page JS goes HERE  -->
 </head>
 
@@ -71,12 +74,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   <!-- //menu -->
 
   <!-- content -->
-  <div class="container" style="margin-block: 65px;">
+  <div class="container" style="margin-block: 30px;">
     {% block content %}
 
     {% endblock %}
     <!-- men-wear-bottom -->
-    <div class="men-wear-bottom">
+    <!-- <div class="men-wear-bottom">
       <div class="col-sm-4 men-wear-left">
         <img class="img-responsive"
           src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F1023%2F7433%2Fproducts%2FC40_b632efb6-e5db-495c-9399-d8db96044cc8.png%3Fv%3D1569040586&f=1&nofb=1&ipt=8cce21da2e965e058173725c861f0ccae518303732c63db60b99eeea36b76999&ipo=images"
@@ -93,13 +96,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         </p>
       </div>
       <div class="clearfix"></div>
-    </div>
+    </div> -->
     <!-- //men-wear-bottom -->
   </div>
   <!-- //content -->
 
   <!-- coupons -->
-  {% include "resources/coupons.html" %}
+<!--   {% include "resources/coupons.html" %}
+ -->
   <!-- //coupons -->
 
   <!-- footer -->
@@ -112,7 +116,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     var compra_formato = localStorage.getItem('compra_formato');
     var compra_productos = localStorage.getItem('compra_productos');
     var formatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", })
-    
+
     $(function () {
       // Si no hay un número previo en el almacenamiento local, establece el número inicial en 0
       if (!compra_item) {
@@ -139,7 +143,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         'precio': precio,
         'description': description,
         'photo': photo,
-        'format': formatter.format(compra_total),
+        'format': formatter.format(precio),
       }
       //Adjunto datos 
       compra_productos.push(objeto)

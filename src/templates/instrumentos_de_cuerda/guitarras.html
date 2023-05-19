@@ -1,38 +1,30 @@
 {% extends "inner_page.html" %}
 
-{% block stylesheets %}
-
-{% endblock %}
-
 {% block content %}
-<div id="numero_asignado"></div>
-
-<!-- title -->
+<!-- breadcrumb -->
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb bg-dark text-white">
-    <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+  <ol class="breadcrumb bg-dark text-white" style="background: black;">
+    <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Instrumentos de Cuerdas</li>
     <li class="breadcrumb-item active" aria-current="page">Guitarras</li>
   </ol>
 </nav>
-<!-- <div class="products-right">
-  <h5 class="mb-1">Guitarras</h5>
-</div> -->
-<!-- //title -->
+<!-- //breadcrumb -->
 
 <!-- progress -->
-<div class='progress' style="margin-top: 15px;">
+<div class='progress' style="margin-top: 45px;">
   <div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
 </div>
 <!-- //progress -->
 
 <!-- myTable -->
 <table id="myTable"></table>
-<template id="profileTemplate">
+<template id="tableTemplate">
   <div class="col-md-3 product-men mb-3" style="margin-bottom: 15px;">
     <div class="men-pro-item simpleCart_shelfItem">
       <div class="men-thumb-item">
-        <img src="%photo_front%" alt="" class="pro-image-front" />
-        <img src="%photo_back%" alt="" class="pro-image-back" />
+        <img src="%photo%" alt="" class="pro-image-front" />
+        <img src="%photo%" alt="" class="pro-image-back" />
         <div class="men-cart-pro">
           <div class="inner-men-cart-pro">
             <a href="#" class="link-product-add-cart">Ver Producto</a>
@@ -42,24 +34,23 @@
       </div>
       <div class="item-info-product">
         <h4 style="padding-inline: 12px;">
-          <a href="#" title="%description%">%description_sort%</a>
+          <a style="font-size: 16px;" href="#" title="%description%">%description_sort%</a>
         </h4>
         <div class="info-product-price">
-          <span class="item_price">%price%
+          <span class="item_price">
+            %price%
           </span>
         </div>
-        <a href="#" class="item_add single-item hvr-outline-out button2" onclick="agregarAlCarrito('%price%', '%description%', '%photo%')">Agregar al Carrito</a>
+        <a href="#" class="item_add single-item hvr-outline-out button2"
+          onclick="agregarAlCarrito('%price%', '%description%', '%photo%')">Agregar al Carrito</a>
       </div>
     </div>
   </div>
 </template>
 <!-- //myTable -->
-<hr style="margin-block: 60px;">
 {% endblock %}
 
 {% block javascripts %}
-<script
-  src="https://unpkg.com/bootstrap-table@1.21.3/dist/extensions/custom-view/bootstrap-table-custom-view.js"></script>
 <script>
   $(function () {
     $("#myTable").bootstrapTable({
@@ -71,32 +62,11 @@
       pagination: true,
       paginationPreText: 'Anterior',
       paginationNextText: 'Siguiente',
-      paginationVAlign: "both",
+      //paginationVAlign: "both",
       showCustomView: true,
-      customView: (data) => {
-        // Agregamos el HTML para cargar los datos
-        var view = ""
-        var template = $("#profileTemplate").html()
-        var description_sort = ""
-        var formatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", })
-        // Recorremos datos
-        $.each(data, function (i, row) {
-          if (row.description.length > 40) {
-            description_sort = row.description.substring(0, 40) + "..."
-          } else {
-            description_sort = row.description
-          }
-          view += template
-            .replaceAll("%description%", row.description)
-            .replaceAll("%description_sort%", description_sort)
-            .replaceAll("%photo%", row.photo)
-            .replaceAll("%photo_front%", row.photo)
-            .replaceAll("%photo_back%", row.photo)
-            .replaceAll("%price%", formatter.format(row.price))
-        });
-        // Retornamos un row con colum
-        return `<div class="row">${view}</div>`;
-      },
+      columns: [
+        { field: 'description', sortable: true }
+      ],
       onLoadSuccess: (number, size) => {
         $(".progress").hide();
         $(".search-input").show()
@@ -104,8 +74,25 @@
       onPageChange: (number, size) => {
         window.scrollTo(0, 0)
       },
+      customView: (data) => {
+        // Agregamos el HTML para cargar los datos
+        var view = ""
+        var template = $("#tableTemplate").html()
+        var description_sort = ""
+        var formatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", })
+        // Recorremos datos
+        $.each(data, function (i, row) {
+          description_sort = row.description.length > 45 ? row.description.substring(0, 45) + "..." : row.description;
+          view += template
+            .replaceAll("%description%", row.description)
+            .replaceAll("%description_sort%", description_sort)
+            .replaceAll("%photo%", row.photo)
+            .replaceAll("%price%", formatter.format(row.price))
+        });
+        // Retornamos un row con colum
+        return `<div class="row">${view}</div>`;
+      }
     });
-
     $(".fixed-table-body, .search-input").hide()
     $("[name='customView']").click().remove()
   })

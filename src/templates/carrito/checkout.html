@@ -2,8 +2,16 @@
 
 {% block content %}
 <!-- check out -->
-<div class="">
-	<div class="container">
+<div class="container">
+	<div id="carrito_msj" style="padding-top: 30px; display: none;">
+		<center>
+			<h1>Tu carrito esta vacio</h1>
+			<img src="https://cdn-icons-png.flaticon.com/256/1170/1170576.png" width="180" alt="%description%"
+				class="img-responsive" />
+		</center>
+	</div>
+
+	<div id="carrito_tabla" style="display: none;">
 		<div class="table-responsive checkout-right animated wow slideInUp" data-wow-delay=".5s">
 			<table id="tabla" class="timetable_sub">
 				<thead>
@@ -41,33 +49,100 @@
 			</template>
 		</div>
 
-		<div id="carrito_msj" style="padding-top: 30px;">
-			<center>
-				<h3>Tu carrito esta vacio</h3>
-			</center>
+		<!-- progress -->
+		<div id='carrito_progress' class='progress' style="margin-top: 35px; display:none;">
+			<div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
 		</div>
+		<!-- //progress -->
 
-		<div id="carrito_pagar" style="display: none;" class="checkout-left">
+		<div id="carrito_botones" style="display: none;" class="checkout-left">
 			<div class="checkout-left-basket animated wow slideInLeft" style="margin-left: 10px; cursor:pointer">
-				<h4>Pagar: <span id="tarifa"></span></li>
+				<h4>
+					Pagar: <span id="tarifa"></span>
 				</h4>
 			</div>
 
-			<div class="checkout-left-basket animated wow slideInLeft" style="margin-left: 10px; cursor:pointer">
-				<h4 style="background: black;">Transformar a USD</li>
+			<div id="btn_clp" style="margin-left: 10px; display: none; cursor:pointer"
+				class="checkout-left-basket animated wow slideInLeft">
+				<h4 style="background: black;">
+					Transformar a CLP
+				</h4>
+			</div>
+
+			<div id="btn_usd" style="cursor:pointer" class="checkout-left-basket animated wow slideInLeft"
+				style="margin-left: 10px;">
+				<h4 style="background: black;">Transformar a USD
 				</h4>
 			</div>
 		</div>
-
 	</div>
 </div>
-
-<hr>
-
 <!-- //check out -->
 {% endblock %}
 
 {% block javascripts %}
+
+<script>
+	$(function () {
+		// Parsear el string JSON a un objeto JavaScript
+		var productos = JSON.parse(compra_productos);
+		if (productos.length > 0) {
+			$('#carrito_tabla').show()
+			// Seleccionar la tabla por su clase (en este caso, se usa la clase "table")
+			var tabla = $('#tabla');
+			var html = '';
+			// Iterar sobre los elementos del array con forEach()
+			productos.forEach(function (producto, indice) {
+				html = $('#miNuevoElemento').html()
+					.replaceAll('%format%', producto.format)
+					.replaceAll('%description%', producto.description)
+					.replaceAll('%photo%', producto.photo)
+				tabla.append(html);
+			});
+			$('#tarifa').text($('#compra_total').text())
+			$('#carrito_botones').show();
+		} else {
+			$('#carrito_msj').show();
+		}
+	})
+
+	$('#btn_usd').on('click', function () {
+		$('#carrito_botones').hide()
+		$('#carrito_progress').show()
+		$.ajax({
+			url: 'https://music-pro-api.herokuapp.com/api/exchange_rate',
+			data: { amount_clp: compra_total },
+			success: function (response) {
+				// Haz algo con la respuesta...
+				$('#tarifa').text(response.format)
+				$('#btn_usd, #carrito_progress').hide()
+				$('#btn_clp, #carrito_botones').show()
+			},
+			error: function (jqXHR, status, errorThrown) {
+				console.error(errorThrown);
+			}
+		});
+	});
+
+	$('#btn_clp').on('click', function () {
+		$('#carrito_progress').show()
+		$('#carrito_botones').hide();
+		// Agrega un retraso de 2 segundos
+		$('#btn_clp, #btn_usd').delay(600)
+			// Agrega las funciones a la cola
+			.queue(function (next) {
+				$('#tarifa').text($('#compra_total').text())
+				$('#btn_clp, #carrito_progress').hide();
+				$('#btn_usd, #carrito_botones').show();
+				next();
+			})
+	});
+
+	$('#vaciar_carrito').on('click', function () {
+		$('#carrito_tabla').hide();
+		$('#carrito_msj').show();
+	});
+</script>
 
 <!--quantity-->
 <script>
@@ -82,39 +157,4 @@
 	});
 </script>
 <!--quantity-->
-
-<script>
-	$.ajax({
-		url: 'https://music-pro-api.herokuapp.com/exchange_rate',
-		data: { amount_clp: 7000 },
-		success: function (response) {
-			console.log(response);
-			// Haz algo con la respuesta...
-		},
-		error: function (jqXHR, status, errorThrown) {
-			console.error(errorThrown);
-		}
-	});
-
-	$(function () {
-		// Parsear el string JSON a un objeto JavaScript
-		var productos = JSON.parse(compra_productos);
-		if (productos.length > 0) {
-			$('#carrito_msj').hide();
-			// Seleccionar la tabla por su clase (en este caso, se usa la clase "table")
-			var tabla = $('#tabla');
-			var html = '';
-			// Iterar sobre los elementos del array con forEach()
-			productos.forEach(function (producto, indice) {
-				html = $('#miNuevoElemento').html()
-					.replaceAll('%format%', producto.format)
-					.replaceAll('%description%', producto.description)
-					.replaceAll('%photo%', producto.photo)
-				tabla.append(html);
-			});
-			$('#tarifa').text($('#compra_total').text())
-			$('#carrito_pagar').show();
-		}
-	})
-</script>
 {% endblock %}
