@@ -89,3 +89,8 @@ def mixers():
 @app_view.route("/checkout.html")
 def checkout():
     return render_template("carrito/checkout.html")
+
+#carrito
+@app_view.route("/asd")
+def asd():
+    return render_template("demo/index.html")

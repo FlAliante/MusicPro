@@ -20,32 +20,7 @@
 <!-- myTable -->
 <table id="myTable"></table>
 <template id="tableTemplate">
-  <div class="col-md-3 product-men mb-3" style="margin-bottom: 15px;">
-    <div class="men-pro-item simpleCart_shelfItem">
-      <div class="men-thumb-item">
-        <img src="%photo%" alt="" class="pro-image-front" />
-        <img src="%photo%" alt="" class="pro-image-back" />
-        <div class="men-cart-pro">
-          <div class="inner-men-cart-pro">
-            <a href="#" class="link-product-add-cart">Ver Producto</a>
-          </div>
-        </div>
-        <span class="product-new-top">New</span>
-      </div>
-      <div class="item-info-product">
-        <h4 style="padding-inline: 12px;">
-          <a style="font-size: 16px;" href="#" title="%description%">%description_sort%</a>
-        </h4>
-        <div class="info-product-price">
-          <span class="item_price">
-            %price%
-          </span>
-        </div>
-        <a href="#" class="item_add single-item hvr-outline-out button2"
-          onclick="agregarAlCarrito('%price%', '%description%', '%photo%')">Agregar al Carrito</a>
-      </div>
-    </div>
-  </div>
+  {% include "resources/card_table.html" %}
 </template>
 <!-- //myTable -->
 {% endblock %}
@@ -65,7 +40,7 @@
       //paginationVAlign: "both",
       showCustomView: true,
       columns: [
-        { field: 'description', sortable: true }
+        { field: 'nombre', sortable: true }
       ],
       onLoadSuccess: (number, size) => {
         $(".progress").hide();
@@ -78,16 +53,17 @@
         // Agregamos el HTML para cargar los datos
         var view = ""
         var template = $("#tableTemplate").html()
-        var description_sort = ""
-        var formatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", })
+        var nombre_sort = ""
         // Recorremos datos
         $.each(data, function (i, row) {
-          description_sort = row.description.length > 45 ? row.description.substring(0, 45) + "..." : row.description;
+          nombre_sort = row.nombre.length > 45 ? row.nombre.substring(0, 45) + "..." : row.nombre;
           view += template
-            .replaceAll("%description%", row.description)
-            .replaceAll("%description_sort%", description_sort)
+            .replaceAll("%nombre_sort%", nombre_sort)
+            .replaceAll("%nombre%", row.nombre)
             .replaceAll("%photo%", row.photo)
-            .replaceAll("%price%", formatter.format(row.price))
+            .replaceAll("%precio%", row.precio)
+            .replaceAll("%format_clp%", row.format_clp)
+
         });
         // Retornamos un row con colum
         return `<div class="row">${view}</div>`;
