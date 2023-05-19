@@ -13,9 +13,6 @@ api_producto = Blueprint("api_producto", __name__)
 @api_producto.route('/api/get_productos', methods=['GET'])
 def get_productos():
     try:
-        # Establece el idioma y la ubicación para el formato
-        locale.setlocale(locale.LC_ALL, 'es_CL.UTF-8')
-
         #Obtengo variables cargadas en la URL
         tipo_producto = request.args.get("tipo_producto")
         if tipo_producto:
@@ -36,7 +33,7 @@ def get_productos():
                 "nombre": producto.nombre,
                 "photo": producto.photo,
                 "precio": producto.precio,
-                "format_clp": locale.currency(producto.precio, grouping=True, symbol='CLP'),         
+                "format_clp": format_price_clp(producto.precio),         
                 "fecha_actualizacion": producto.fecha_actualizacion,
                 "fecha_creacion": producto.fecha_creacion,
                 "serie": [
@@ -83,3 +80,13 @@ def exchange_rate():
     except Exception as e:
         print(str(e))
         return make_response({'status': 500, 'error': str(e)}, 500)
+    
+def format_price_clp(price):
+    # Obtiene el valor entero y decimal del precio
+    int_part, dec_part = str(price).split('.')
+    
+    # Divide la parte entera en grupos de tres dígitos y los une con puntos
+    int_part = '.'.join(reversed([int_part[max(i-3, 0):i] for i in range(len(int_part), 0, -3)]))
+    
+    # Devuelve la cadena formateada en pesos chilenos (CLP)
+    return f"${int_part}"
