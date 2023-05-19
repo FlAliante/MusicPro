@@ -14,7 +14,7 @@ api_producto = Blueprint("api_producto", __name__)
 def get_productos():
     try:
         # Establece el idioma y la ubicación para el formato
-        locale.setlocale(locale.LC_ALL, 'es_MX.UTF-8')
+        locale.setlocale(locale.LC_ALL, 'es_CL.UTF-8')
 
         #Obtengo variables cargadas en la URL
         tipo_producto = request.args.get("tipo_producto")
