@@ -17,9 +17,10 @@ function generarTablaTipoProductos(tipo_producto) {
     //paginationVAlign: "both",
     showCustomView: true,
     onLoadSuccess: (number, size) => {
+      $(".progress").hide();
       $("#divTabla").show();
       $("[name='customView']").click().remove();
-      $(".progress, .fixed-table-body, .pagination-detail").hide();
+      $(".fixed-table-body, .page-list").remove();
     },
     onLoadError: (status, res) => {
       // Ocultamos el indicador de carga en caso de que haya un error
@@ -30,6 +31,7 @@ function generarTablaTipoProductos(tipo_producto) {
     },
     onPageChange: (number, size) => {
       window.scrollTo(0, 0);
+      $(".page-list").remove();
     },
     customView: (data) => {
       // Agregamos el HTML para cargar los datos

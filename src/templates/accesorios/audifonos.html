@@ -11,18 +11,26 @@
 </nav>
 <!-- //breadcrumb -->
 
+<!-- myTable -->
+<div id="divTabla" style="display: none;">
+  <table id="myTable"></table>
+  <template id="tableTemplate">
+    {% include "resources/card_table.html" %}
+  </template>
+</div>
+<!-- //myTable -->
+
 <!-- progress -->
-<div class='progress' style="margin-top: 45px;">
+<div class='progress'>
   <div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
 </div>
 <!-- //progress -->
 
-<!-- myTable -->
-<table id="myTable"></table>
-<template id="tableTemplate">
-  {% include "resources/card_table.html" %}
-</template>
-<!-- //myTable -->
+<!-- alert_generic -->
+<div style="display: none;" class="alert alert-danger" role="alert">
+  {% include "resources/alert_generic.html" %}
+</div>
+<!-- //alert_generic -->
 {% endblock %}
 
 {% block javascripts %}
