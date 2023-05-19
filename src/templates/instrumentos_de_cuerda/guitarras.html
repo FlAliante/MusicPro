@@ -11,66 +11,34 @@
 </nav>
 <!-- //breadcrumb -->
 
+<!-- myTable -->
+<div id="divTabla" style="display: none;">
+  <table id="myTable"></table>
+  <template id="tableTemplate">
+    {% include "resources/card_table.html" %}
+  </template>
+</div>
+<!-- //myTable -->
+
 <!-- progress -->
-<div class='progress' style="margin-top: 45px;">
+<div class='progress'>
   <div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
 </div>
 <!-- //progress -->
 
-<!-- myTable -->
-<table id="myTable"></table>
-<template id="tableTemplate">
-  {% include "resources/card_table.html" %}
-</template>
-<!-- //myTable -->
+<!-- alert_generic -->
+<div style="display: none;" class="alert alert-danger" role="alert">
+  {% include "resources/alert_generic.html" %}
+</div>
+<!-- //alert_generic -->
+
 {% endblock %}
 
 {% block javascripts %}
+<script src="static/js/tablaProductos.js"></script>
 <script>
   $(function () {
-    $("#myTable").bootstrapTable({
-      url: '/get_productos/1',
-      locale: 'es-CL',
-      search: true,
-      searchAlign: 'left',
-      pageSize: 8,
-      pagination: true,
-      paginationPreText: 'Anterior',
-      paginationNextText: 'Siguiente',
-      //paginationVAlign: "both",
-      showCustomView: true,
-      columns: [
-        { field: 'nombre', sortable: true }
-      ],
-      onLoadSuccess: (number, size) => {
-        $(".progress").hide();
-        $(".search-input").show()
-      },
-      onPageChange: (number, size) => {
-        window.scrollTo(0, 0)
-      },
-      customView: (data) => {
-        // Agregamos el HTML para cargar los datos
-        var view = ""
-        var template = $("#tableTemplate").html()
-        var nombre_sort = ""
-        // Recorremos datos
-        $.each(data, function (i, row) {
-          nombre_sort = row.nombre.length > 50 ? row.nombre.substring(0, 50) + "..." : row.nombre;
-          view += template
-            .replaceAll("%nombre_sort%", nombre_sort)
-            .replaceAll("%nombre%", row.nombre)
-            .replaceAll("%photo%", row.photo)
-            .replaceAll("%precio%", row.precio)
-            .replaceAll("%format_clp%", row.format_clp)
-            .replaceAll("%marca%", row.marca)
-        });
-        // Retornamos un row con colum
-        return `<br><div class="row">${view}</div>`;
-      }
-    });
-    $(".fixed-table-body, .search-input").hide()
-    $("[name='customView']").click().remove()
+    generarTablaTipoProductos(1)
   })
 </script>
 {% endblock %}
