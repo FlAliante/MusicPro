@@ -18,8 +18,8 @@ def get_productos():
         if tipo_producto:
             productos = Producto.query.filter(Producto.tipo_producto == tipo_producto)
         else:
-            #Obtengo 12 datos aleatorios
-            productos = Producto.query.order_by(func.random()).limit(12).all()
+            #Obtengo 8 datos aleatorios
+            productos = Producto.query.order_by(func.random()).limit(8).all()
 
         #Creo una lista para guardar los productos
         serialized_list = []
