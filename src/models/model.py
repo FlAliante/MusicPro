@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
 from config import Base
+from sqlalchemy.sql import func
 
 
 class Product(Base):
@@ -91,4 +92,46 @@ class User(Base):
             'email': self.email,
             'password': self.password
         }
+
+
+
+class Transaction(Base):
+    __tablename__ = 'transactions'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    update_date = Column(DateTime, nullable=False,
+                         server_default=func.current_timestamp())
+    create_date = Column(DateTime, nullable=False,
+                         server_default=func.current_timestamp(),
+                         onupdate=func.current_timestamp())
+    vci = Column(String(10), nullable=False)
+    amount = Column(Integer, nullable=False)
+    status = Column(String(20), nullable=False)
+    buy_order = Column(String(20), nullable=False)
+    session_id = Column(String(20), nullable=False)
+    card_number = Column(String(4), nullable=False)
+    accounting_date = Column(String(4), nullable=False)
+    transaction_date = Column(DateTime, nullable=False)
+    authorization_code = Column(String(20), nullable=False)
+    payment_type_code = Column(String(10), nullable=False)
+    response_code = Column(Integer, nullable=False)
+    installments_number = Column(Integer, nullable=False)
+    token = Column(String(100))
+    url = Column(String(255))
+
+    def __init__(self, vci, amount, status, buy_order, session_id, card_number, accounting_date, transaction_date, authorization_code, payment_type_code, response_code, installments_number, token=None, url=None):
+        self.vci = vci
+        self.amount = amount
+        self.status = status
+        self.buy_order = buy_order
+        self.session_id = session_id
+        self.card_number = card_number
+        self.accounting_date = accounting_date
+        self.transaction_date = transaction_date
+        self.authorization_code = authorization_code
+        self.payment_type_code = payment_type_code
+        self.response_code = response_code
+        self.installments_number = installments_number
+        self.token = token
+        self.url = url
 

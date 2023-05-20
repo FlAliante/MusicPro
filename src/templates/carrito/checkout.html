@@ -89,13 +89,9 @@
 			</div>
 		</div>
 
-		<form method="POST" action="/pagar_transkbank">
-			<input type="hidden" name="campo_oculto_1" value="valor_1">
-			<input type="hidden" name="campo_oculto_2" value="valor_2">
-			<button type="submit">Enviar</button>
+		<form id="formulario" method="POST" action="/redireccionarWebPay">
+			<input id="buy_order" type="hidden" name="buy_order" value="">
 		</form>
-
-
 	</div>
 </div>
 <!-- //check out -->
@@ -142,13 +138,17 @@
 				amount_usd: precio_dolar
 			},
 			dataType: 'json'
+		}).done(function (response) {
+			console.log(response);
+			$("#buy_order").val(response);
+			$("#formulario").submit()
 		}).fail(function (jqXHR, textStatus) {
 			console.error("Error al intentar pagar mediante Transbank", textStatus, jqXHR);
-		}).always(function () {
 			$('#carrito_botones').show()
 			$('#carrito_progress').hide()
+		}).always(function () {
 			console.log('Petición AJAX completada.');
-		});
+		})
 	});
 
 	$('#btn_usd').on('click', function () {

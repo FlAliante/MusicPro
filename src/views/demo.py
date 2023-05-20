@@ -1,5 +1,5 @@
 from sqlalchemy import asc, desc
-from src.models.models import Product
+from src.models.model import Product
 from flask import Blueprint, render_template
 
 view_demo = Blueprint('view_demo', __name__)
