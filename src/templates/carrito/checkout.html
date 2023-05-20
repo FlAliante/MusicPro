@@ -28,9 +28,9 @@
 			<table id="tabla" class="timetable_sub">
 				<thead>
 					<tr>
-						<th>Remove</th>
+						<!-- <th>Remove</th> -->
 						<th>Product</th>
-						<th>Quantity</th>
+						<!-- <th>Quantity</th> -->
 						<th>Product Name</th>
 						<th>Price</th>
 					</tr>
@@ -38,15 +38,15 @@
 			</table>
 			<template id="miNuevoElemento">
 				<tr>
-					<td>
+					<!-- <td>
 						<center>
 							<span style="cursor: pointer;">Eliminar</span>
 						</center>
-					</td>
+					</td> -->
 					<td class="invert-image" style="width: 300px;">
 						<a href="#"><img src="%photo%" alt="%description%" class="img-responsive" /></a>
 					</td>
-					<td class="invert">
+					<!-- <td class="invert">
 						<div class="quantity">
 							<div class="quantity-select">
 								<div class="entry value-minus">&nbsp;</div>
@@ -54,7 +54,7 @@
 								<div class="entry value-plus active">&nbsp;</div>
 							</div>
 						</div>
-					</td>
+					</td> -->
 					<td class="invert">%description%</td>
 					<td class="invert">%format%</td>
 				</tr>
@@ -68,7 +68,8 @@
 		<!-- //progress -->
 
 		<div id="carrito_botones" style="display: none;" class="checkout-left">
-			<div id="btn_pagar" class="checkout-left-basket animated wow slideInLeft" style="margin-left: 10px; cursor:pointer">
+			<div id="btn_pagar" class="checkout-left-basket animated wow slideInLeft"
+				style="margin-left: 10px; cursor:pointer">
 				<h4>
 					Pagar: <span id="tarifa"></span>
 				</h4>
@@ -87,6 +88,14 @@
 				</h4>
 			</div>
 		</div>
+
+		<form method="POST" action="/pagar_transkbank">
+			<input type="hidden" name="campo_oculto_1" value="valor_1">
+			<input type="hidden" name="campo_oculto_2" value="valor_2">
+			<button type="submit">Enviar</button>
+		</form>
+
+
 	</div>
 </div>
 <!-- //check out -->
@@ -126,18 +135,19 @@
 		$('#carrito_botones').hide()
 		$('#carrito_progress').show()
 		$.ajax({
+			method: 'POST',
 			url: '/pagar_transkbank',
-			data: { amount_clp: compra_total, amount_usd: precio_dolar },
-			success: function (response) {
-				// Haz algo con la respuesta...
-				alert('Pagado!!!')
-				$('#vaciar_carrito').click();
-				$('#btn_usd, #carrito_progress, #carrito_msj').hide()
-				$('#carrito_pagado').show();
+			data: {
+				amount_clp: compra_total,
+				amount_usd: precio_dolar
 			},
-			error: function (jqXHR, status, errorThrown) {
-				console.error(errorThrown);
-			}
+			dataType: 'json'
+		}).fail(function (jqXHR, textStatus) {
+			console.error("Error al intentar pagar mediante Transbank", textStatus, jqXHR);
+		}).always(function () {
+			$('#carrito_botones').show()
+			$('#carrito_progress').hide()
+			console.log('Petición AJAX completada.');
 		});
 	});
 

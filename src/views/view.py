@@ -90,6 +90,10 @@ def mixers():
 def checkout():
     return render_template("carrito/checkout.html")
 
+@app_view.route("/pagado.html")
+def pagado():
+    return render_template("carrito/pagado.html")
+
 #carrito
 @app_view.route("/asd")
 def asd():
