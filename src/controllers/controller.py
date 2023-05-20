@@ -1,4 +1,3 @@
-import engineio
 from flask import Blueprint, jsonify, make_response, redirect, render_template, request
 from sqlalchemy import engine_from_config
 from config import db_session, engine
