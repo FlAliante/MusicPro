@@ -168,8 +168,6 @@ def pagadoasd(id):
         transaction.accounting_date=data['accounting_date']
         transaction.transaction_date=data['transaction_date']
         transaction.installments_number=data['installments_number']
-        transaction.amount_clp=request.form['amount_clp']
-        transaction.amount_usd=request.form['amount_usd']
 
         #Con el commit actualizas la tabla
         db_session.commit()
