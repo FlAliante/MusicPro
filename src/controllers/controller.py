@@ -88,10 +88,16 @@ def pagar_transkbank():
 
 @app_controller.route("/redireccionarWebPay", methods=["POST"])
 def redireccionarWebPay():
-    id = request.form["buy_order"]
-    # Busca la transsaccion por id    
-    transaction = Transaction.query.get(id)
-    return redirect(transaction.url)
+    try:
+        id = request.form["buy_order"]
+        # Busca la transsaccion por id    
+        transaction = Transaction.query.get(id)
+        return redirect(transaction.url)
+    except Exception as e:
+        print(str(e))
+        return make_response(str(e), 500)
+    finally:
+        db_session.close_all()
 
 
 #'BUY106-MP468-WP550'
