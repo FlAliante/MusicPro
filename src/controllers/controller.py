@@ -9,6 +9,40 @@ import datetime
 
 app_controller = Blueprint("view_cliente", __name__)
 
+# Trae todos los productos y por tipo de producto 
+# http://localhost:5000/get_productos o http://localhost:5000/get_productos?tipo_producto=1
+@app_controller.route("/get_productos", methods=["GET"])
+def get_productos():
+    try:
+        tipo_producto = request.args.get("tipo_producto")
+
+        if(tipo_producto):
+            url = f"https://music-pro-api.herokuapp.com/api/get_productos?tipo_producto={tipo_producto}"
+        else:
+            url = "https://music-pro-api.herokuapp.com/api/get_productos"
+
+        response = requests.get(url)
+        response.raise_for_status()
+        serialized_list = []
+
+        for result in response.json():
+            serialized_product = {
+                "id": result['id'],
+                "nombre": result['nombre'],
+                "photo": result['photo'],
+                "precio": result['precio'],
+                "format_clp": result['format_clp'],
+                "marca": result['marca'],
+            }
+            serialized_list.append(serialized_product)
+        return jsonify(serialized_list)
+    
+    except Exception as e:
+        error = { "status": 500, "error": str(e) }
+        print(error)
+        return make_response(error, 500)
+    
+
 # Doc API TRANSBANK https://www.transbankdevelopers.cl/referencia/webpay?l=http#confirmar-una-transaccion
 @app_controller.route("/pagar_transkbank", methods=["POST"])
 def pagar_transkbank():    
@@ -27,7 +61,7 @@ def pagar_transkbank():
         payload = {
             "buy_order": f"BUY{fecha_formateada}-MP{str(random.randint(100, 999))}-WP{str(random.randint(100, 999))}",
             "session_id": f"SES{fecha_formateada}-MP{str(random.randint(100, 999))}-WP{str(random.randint(100, 999))}",
-            "amount": request.form["amount"],
+            "amount": float(request.form["amount"]),
             "return_url": f"{request.host_url}pagado/{transaction.id}" # http://127.0.0.1:5000/pagado/{buy_order}
         }
 
@@ -65,23 +99,23 @@ def pagar_transkbank():
         transaction.amount=data['amount']
         transaction.status=data['status']
         transaction.buy_order=data['buy_order'] 
-        transaction.session_id=data['session_ida'] 
+        transaction.session_id=data['session_id'] 
         transaction.accounting_date=data['accounting_date']
         transaction.transaction_date=data['transaction_date']
         transaction.installments_number=data['installments_number']
-
         transaction.amount_clp=request.form['amount_clp']
         transaction.amount_usd=request.form['amount_usd']
-
         transaction.token=token
         transaction.url=url_create
 
         db_session.commit()
-        #4051 8856 0044 6623
         return jsonify(transaction.id)
     
     except Exception as e:
-        return make_response(str(e), 500),  print(str(e))
+        if transaction.id:
+            db_session.delete(transaction)
+            db_session.commit()
+        return make_response(str(e), 500), print(str(e))
     finally:
         db_session.close_all()
 
@@ -89,13 +123,13 @@ def pagar_transkbank():
 @app_controller.route("/redireccionarWebPay", methods=["POST"])
 def redireccionarWebPay():
     try:
-        id = request.form["buy_order"]
+        id = request.form["id"]
         # Busca la transsaccion por id    
         transaction = Transaction.query.get(id)
+        #4051 8856 0044 6623
         return redirect(transaction.url)
     except Exception as e:
-        print(str(e))
-        return make_response(str(e), 500)
+        return make_response(str(e), 500), print(str(e))
     finally:
         db_session.close_all()
 
@@ -116,7 +150,9 @@ def pagadoasd(id):
         
         response = requests.put(url, headers=headers)
         if response.status_code != 200:
-            return make_response(response.json(), response.status_code)
+            #return make_response(response.json(), response.status_code)
+            #return render_template("carrito/checkout.html")
+            return redirect(f"{request.host_url}checkout.html")
 
         data = json.loads(response.content)
 
@@ -125,52 +161,21 @@ def pagadoasd(id):
         transaction.payment_type_code = data['payment_type_code']
         transaction.response_code = data['response_code']
         transaction.card_detail = data['card_detail']
+        transaction.amount=data['amount']
+        transaction.status=data['status']
+        transaction.buy_order=data['buy_order'] 
+        transaction.session_id=data['session_id'] 
+        transaction.accounting_date=data['accounting_date']
+        transaction.transaction_date=data['transaction_date']
+        transaction.installments_number=data['installments_number']
+        transaction.amount_clp=request.form['amount_clp']
+        transaction.amount_usd=request.form['amount_usd']
 
         #Con el commit actualizas la tabla
         db_session.commit()
 
         return redirect(request.host_url + "pagado.html") # render_template("carrito/pagado.html")
     except Exception as e:
-        print(str(e))
-        return make_response(str(e), 500)
+        return make_response(str(e), 500), print(str(e))
     finally:
         db_session.close_all()
-
-
-
-
-
-
-# Trae todos los productos y por tipo de producto 
-# http://localhost:5000/get_productos o http://localhost:5000/get_productos?tipo_producto=1
-@app_controller.route("/get_productos", methods=["GET"])
-def get_productos():
-    try:
-        tipo_producto = request.args.get("tipo_producto")
-
-        if(tipo_producto):
-            url = f"https://music-pro-api.herokuapp.com/api/get_productos?tipo_producto={tipo_producto}"
-        else:
-            url = "https://music-pro-api.herokuapp.com/api/get_productos"
-
-        response = requests.get(url)
-        response.raise_for_status()
-        serialized_list = []
-
-        for result in response.json():
-            serialized_product = {
-                "id": result['id'],
-                "nombre": result['nombre'],
-                "photo": result['photo'],
-                "precio": result['precio'],
-                "format_clp": result['format_clp'],
-                "marca": result['marca'],
-            }
-            serialized_list.append(serialized_product)
-        return jsonify(serialized_list)
-    
-    except Exception as e:
-        error = { "status": 500, "error": str(e) }
-        print(error)
-        return make_response(error, 500)
-    
