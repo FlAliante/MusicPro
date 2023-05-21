@@ -28,18 +28,6 @@
   var compra_productos = localStorage.getItem('compra_productos');
   var formatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", })
 
-  $(function () {
-    // Si no hay un número previo en el almacenamiento local, establece el número inicial en 0
-    if (!compra_item) {
-      compra_total = 0;
-      compra_item = 0;
-      compra_productos = '[]'
-    }
-
-    $('#compra_total').text(formatter.format(compra_total))
-    $('#compra_item').text(compra_item)
-  });
-
   function agregarAlCarrito(precio, description, photo) {
     //parseo textos a numeros para sumar
     precio = parseInt(precio);
@@ -81,4 +69,22 @@
     $('#compra_total').text('$' + compra_total);
     $('#compra_item').text(compra_item)
   }
+
+  $(function () {
+    // Si no hay un número previo en el almacenamiento local, establece el número inicial en 0
+    if (!compra_item) {
+      compra_total = 0;
+      compra_item = 0;
+      compra_productos = '[]'
+    }
+
+    $('#compra_total').text(formatter.format(compra_total))
+    $('#compra_item').text(compra_item)
+
+
+    $('#vaciar_carrito').on('click', function () {
+      $('#carrito_tabla').hide();
+      $('#carrito_msj').show();
+    });
+  });
 </script>

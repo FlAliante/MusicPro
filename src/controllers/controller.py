@@ -5,85 +5,133 @@ from src.models.model import Transaction
 import requests
 import json
 import random
-
+import datetime
 
 app_controller = Blueprint("view_cliente", __name__)
 
-headers = {
-    "Tbk-Api-Key-Id": "597055555532",
-    "Tbk-Api-Key-Secret": "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
-    "Content-Type": "application/json"
-}
-
 # Doc API TRANSBANK https://www.transbankdevelopers.cl/referencia/webpay?l=http#confirmar-una-transaccion
 @app_controller.route("/pagar_transkbank", methods=["POST"])
-def pagar_transkbank():
+def pagar_transkbank():    
     try:
-        amount_clp = request.form['amount_clp']
-        amount_usd = request.form["amount_usd"]
-        buy_order = f"BUY{str(random.randint(100, 999))}-MP{str(random.randint(100, 999))}-WP{str(random.randint(100, 999))}"
-        session_id = buy_order
-        url_actual = request.host_url
-                    
-        # Creo el pago
+        transaction = Transaction()
+        db_session.add(transaction)
+        db_session.commit()
+
+        fecha_actual = datetime.date.today()
+        fecha_formateada = fecha_actual.strftime("%d%m%Y")
+
+        # Declaro URL
         url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions"
+
+        # Creo el JSON
         payload = {
-            "buy_order": buy_order,
-            "session_id": session_id,
-            "amount": amount_clp,
-            "return_url": url_actual + "pagado.html"
-            #"return_url": url_actual + "pagado/" + buy_order
+            "buy_order": f"BUY{fecha_formateada}-MP{str(random.randint(100, 999))}-WP{str(random.randint(100, 999))}",
+            "session_id": f"SES{fecha_formateada}-MP{str(random.randint(100, 999))}-WP{str(random.randint(100, 999))}",
+            "amount": request.form["amount"],
+            "return_url": f"{request.host_url}pagado/{transaction.id}" # http://127.0.0.1:5000/pagado/{buy_order}
         }
 
-        #Recibo en formato json
+        #Creo las credenciales
+        headers = {
+            "Tbk-Api-Key-Id": "597055555532",
+            "Tbk-Api-Key-Secret": "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
+            "Content-Type": "application/json"
+        }
+
+        #Envio la solicitud
         response = requests.post(url, json=payload, headers=headers)
+        
+        #Si no es estatus 200 lo saco del metodo
+        if response.status_code != 200:
+            return make_response(response.json(), response.status_code)
+            
+        #Rescato el resultado en formato json 
+        data = response.json()
+        token = data['token']
+        url = data['url']
+        url_create = f"{url}?token_ws={token}"
 
-        if response.status_code == 200:
-            token = response.json()['token']
-            new_url = f"{response.json()['url']}?token_ws={token}" 
-            url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{token}"
+        #Obtengo el estado de la transacion segun el token
+        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{token}"
+        response = requests.get(url, headers=headers)
 
-            response = requests.get(url, headers=headers)
+        #Si no es estatus 200 lo saco del metodo
+        if response.status_code != 200:
+            return make_response(response.json(), response.status_code)
 
-            result = response.json()
-            transaction = Transaction(
-                vci = '', 
-                card_number='', 
-                authorization_code= '', 
-                payment_type_code='', 
-                response_code = '',
-                amount=result['amount'], 
-                status=result['status'], 
-                buy_order=result['buy_order'], 
-                session_id=result['session_id'], 
-                accounting_date=result['accounting_date'], 
-                transaction_date=result['transaction_date'], 
-                installments_number=result['installments_number'], 
-                token=token, 
-                url=new_url
-            )
+        #Obtengo el resultado segun formato
+        data = json.loads(response.content)
 
-            db_session.add(transaction)
-            db_session.commit()
+        transaction.amount=data['amount']
+        transaction.status=data['status']
+        transaction.buy_order=data['buy_order'] 
+        transaction.session_id=data['session_ida'] 
+        transaction.accounting_date=data['accounting_date']
+        transaction.transaction_date=data['transaction_date']
+        transaction.installments_number=data['installments_number']
 
-            return jsonify(buy_order)
-        else: 
-            return make_response(jsonify(response.json()), response.status_code)
+        transaction.amount_clp=request.form['amount_clp']
+        transaction.amount_usd=request.form['amount_usd']
+
+        transaction.token=token
+        transaction.url=url_create
+
+        db_session.commit()
+        #4051 8856 0044 6623
+        return jsonify(transaction.id)
+    
+    except Exception as e:
+        return make_response(str(e), 500),  print(str(e))
+    finally:
+        db_session.close_all()
+
+
+@app_controller.route("/redireccionarWebPay", methods=["POST"])
+def redireccionarWebPay():
+    id = request.form["buy_order"]
+    # Busca la transsaccion por id    
+    transaction = Transaction.query.get(id)
+    return redirect(transaction.url)
+
+
+#'BUY106-MP468-WP550'
+@app_controller.route("/pagado/<id>")
+def pagadoasd(id):
+    try:
+        transaction = Transaction.query.get(id)
+
+        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{transaction.token}"
+
+        headers = {
+            "Tbk-Api-Key-Id": "597055555532",
+            "Tbk-Api-Key-Secret": "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
+            "Content-Type": "application/json"
+        }
+        
+        response = requests.put(url, headers=headers)
+        if response.status_code != 200:
+            return make_response(response.json(), response.status_code)
+
+        data = json.loads(response.content)
+
+        transaction.vci = data['vci']
+        transaction.authorization_code = data['authorization_code']
+        transaction.payment_type_code = data['payment_type_code']
+        transaction.response_code = data['response_code']
+        transaction.card_detail = data['card_detail']
+
+        #Con el commit actualizas la tabla
+        db_session.commit()
+
+        return redirect(request.host_url + "pagado.html") # render_template("carrito/pagado.html")
     except Exception as e:
         print(str(e))
         return make_response(str(e), 500)
     finally:
         db_session.close_all()
-   
 
-@app_controller.route("/redireccionarWebPay", methods=["POST"])
-def redireccionarWebPay():
-    buy_order = request.form["buy_order"]    
-    transaction = Transaction.query.filter(Transaction.buy_order == buy_order)
-    url = ''
-    for item in transaction:
-        url = item.url
-    return redirect(url)
+
+
 
 
 
@@ -120,5 +168,3 @@ def get_productos():
         print(error)
         return make_response(error, 500)
     
-
- 
