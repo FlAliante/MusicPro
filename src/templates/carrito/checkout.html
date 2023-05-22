@@ -1,21 +1,43 @@
 {% extends "inner_page.html" %}
 
 {% block content %}
-
-<!-- check out -->
-
 <!-- Carrito Vacio -->
 <div id="carrito_msj" style="padding-top: 30px; display: none;">
 	<center>
 		<h3><span>Tu carrito </span>esta vacio</h3>
-		<img src="https://cdn-icons-png.flaticon.com/256/1170/1170576.png" width="180" alt="%description%"
+		<img src="https://cdn-icons-png.flaticon.com/256/1170/1170576.png" width="180" alt="%nombre%"
 			class="img-responsive" />
 	</center>
 </div>
 <!-- Carrito Vacio -->
 
-<div id="carrito_tabla" style="display: none; font-family: 'Montserrat', sans-serif;">
+<!-- alert_generic -->
+<div style="display: none; margin-bottom: 30px;" class="alert alert-danger margin mensaje alert-carrito" role="alert">
+	{% include "resources/alert_generic.html" %}
+</div>
+<!-- //alert_generic -->
 
+{% if error %}
+<!-- alert_generic -->
+<div style="display: none; margin-bottom: 30px;" class="alert alert-danger margin mensaje alert-carrito" role="alert">
+	{% include "resources/alert_generic.html" %}
+	<center>
+		<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"
+			style="font-size: 40px; transform: scale(1);"></span>
+	
+		<h4 class="alert-heading">Entramos un error!</h4>
+		<p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer
+			so
+			that you can see how spacing within an alert works with this kind of content.</p>
+		<hr>
+		<p class="mb-0" id="txtError">{{ msj }}</p>
+	</center>
+</div>
+<!-- //alert_generic -->
+{% endif %}
+
+
+<div id="carrito_tabla" style="display: none; font-family: 'Montserrat', sans-serif;">
 	<div class="table-responsive checkout-right animated wow slideInUp " data-wow-delay=".5s">
 		<table id="tabla" class="timetable_sub">
 			<thead>
@@ -30,46 +52,45 @@
 			<tr>
 				<td>
 					<center>
-						<a href="#"><img width="100" src="%photo%" alt="%description%" class="img-responsive" /></a>
+						<a href="#"><img width="100" src="%photo%" alt="%nombre%" class="img-responsive" /></a>
 					</center>
-
 					<b class="show_responsive">%format%</b>
 				</td>
-				<td class="">%description%</td>
+				<td class="">%nombre%</td>
 				<td class="hide_responsive"><b>%format%</b></td>
 			</tr>
 		</template>
 	</div>
 
 	<div style="text-align: right; margin-block: 30px; font-size: 30px;">
-		<i id="tarifa_retart" class="glyphicon glyphicon-refresh spin" style="display:none;" aria-hidden="true"></i>
-		<span id="tarifa"></span>
+		<i id="amount_retart" class="glyphicon glyphicon-refresh spin" style="display:none;" aria-hidden="true"></i>
+		<span id="amount"></span>
 	</div>
 
 	<!-- progress -->
 	<div id='carrito_progress' style="margin-top: 35px; display:none;">
-		<!-- <h4 style="text-align: right;">
+		<h4 style="text-align: right;">
 			Espere un momento...
-		</h4> -->
+		</h4>
 		<div class='progress'>
 			<div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
 		</div>
 	</div>
 	<!-- //progress -->
 
-	<form id="formulario" method="POST" action="/redireccionarWebPay">
-		<input id="id" type="hidden" name="id" value="">
+	<form id="formulario" method="POST" action="/transaction_status">
+		<input id="url" type="hidden" name="url" value="">
+		<input id="token" type="hidden" name="token" value="">
 		<input id="amount_clp" type="hidden" name="amount_clp" value="$0">
 		<input id="amount_usd" type="hidden" name="amount_usd" value="$0">
+		<input id="carrito_productos" type="hidden" name="carrito_productos" value="">		
 
 		<div id="carrito_botones" style="display: none;">
-
 			<div id="btn_pagar" class="checkout-left-basket" style="cursor:pointer; margin-left: 10px;">
 				<h4>
 					Pagar
 				</h4>
 			</div>
-
 			<div id="btn_clp" style="display: none; cursor:pointer" class="checkout-left-basket">
 				<h4 style="background: black;">
 					Cambiar a CLP
@@ -83,116 +104,17 @@
 			</div>
 		</div>
 	</form>
-	<br>
 </div>
 
-<!-- alert_generic -->
-<div style="display: none;" class="alert alert-danger margin mensaje" role="alert">
-	{% include "resources/alert_generic.html" %}
-</div>
-<!-- //alert_generic -->
 {% endblock %}
 
 {% block javascripts %}
-
 <script>
-	var amount = compra_total
-
-	// Crea el pago
-	$('#btn_pagar').on('click', function () {
-		//Escondo botones
-		$('#carrito_botones, .alert-danger').hide()
-		$('#carrito_progress, #tarifa_retart').show()
-		//Realizo llamado para consultar el codigo del producto
-		$.ajax({
-			method: 'POST',
-			url: '/pagar_transkbank',
-			dataType: 'json',
-			data: {
-				amount: amount,
-				amount_clp: $("#amount_clp").val(),
-				amount_usd: $("#amount_usd").val(),
-				compra_productos: compra_productos
-			},
-		}).done(function (response) {
-			//recibo el numero de orden y hago el submit para el redirect
-			$("#id").val(response);
-			$("#formulario").submit()
-		}).fail(function (jqXHR, textStatus) {
-			console.error(jqXHR.responseText)
-			$("#txtError").text(`${jqXHR.statusText} (${jqXHR.status})`)
-			$('.alert-danger').show()
-			$('#carrito_botones').show()
-			$('#carrito_progress').hide()
-		}).always(function () {
-			console.log('Petición AJAX completada.');
-		})
-	});
-
-	$('#btn_usd').on('click', function () {
-		//Escondo botones
-		$('#carrito_botones, .alert-danger').hide()
-		$('#carrito_progress, #tarifa_retart').show()
-
-		$.ajax({
-			url: 'https://music-pro-api.herokuapp.com/api/exchange_rate',
-			data: { amount_clp: compra_total },
-		}).done(function (response) {
-			// Haz algo con la respuesta...
-			$('#tarifa').text('USD ' + response.format)
-			$("#amount_usd").val(response.format);
-			//amount = response.result
-		}).fail(function (jqXHR, textStatus) {
-			console.error(textStatus)
-			console.error(jqXHR)
-			$("#txtError").text(`${jqXHR.statusText}(${jqXHR.status}): ${jqXHR.responseText}`)
-			$('.alert-danger').show()
-		}).always(function () {
-			$('#btn_usd, #carrito_progress, #tarifa_retart').hide()
-			$('#btn_clp, #carrito_botones').show()
-		})
-	});
-
-	$('#btn_clp').on('click', function () {
-		$('#carrito_progress, #tarifa_retart').show()
-		$('#carrito_botones, .alert-danger').hide();
-		// Agrega un retraso de 2 segundos
-		$('#btn_clp, #btn_usd').delay(600)
-			// Agrega las funciones a la cola
-			.queue(function (next) {
-				$('#tarifa').text("CLP " + $('#compra_total').text())
-				$('#btn_clp, #carrito_progress, #tarifa_retart').hide();
-				$('#btn_usd, #carrito_botones').show();
-				amount = compra_total
-				next();
-			})
-	});
-
-
 	$(function () {
-		// Parsear el string JSON a un objeto JavaScript con datos del carrito
-		var productos = JSON.parse(compra_productos);
-		//Crea la tabla con datos del carrito
-		if (productos.length > 0) {
-			$('#carrito_tabla').show()
-			// Seleccionar la tabla por su clase (en este caso, se usa la clase "table")
-			var tabla = $('#tabla');
-			var html = '';
-			// Iterar sobre los elementos del array con forEach()
-			productos.forEach(function (producto, indice) {
-				html = $('#miNuevoElemento').html()
-					.replaceAll('%format%', producto.format)
-					.replaceAll('%description%', producto.description)
-					.replaceAll('%photo%', producto.photo)
-				tabla.append(html);
-			});
-			$('#tarifa').text(`CLP ${$('#compra_total').text()} `)
-			$('#carrito_botones').show();
-			$("#amount_clp").val($('#compra_total').text())
-		} else {
-			$('#carrito_msj').show();
-		}
+		generarTablaCarrito()
+		generarBotonPagar()
+		generarBotonUSD()
+		generarBotonCLP()
 	})
-
 </script>
 {% endblock %}
