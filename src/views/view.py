@@ -28,67 +28,67 @@ def index():
 
 
 #instrumentos_de_cuerda
+@app_view.route("/guitarras.html")
+def guitarras():
+    return render_template("instrumentos_de_cuerda/guitarras.html", tipo_producto = 1)
+
 @app_view.route("/bajos.html")
 def bajos():
-    return render_template("instrumentos_de_cuerda/bajos.html")
+    return render_template("instrumentos_de_cuerda/bajos.html", tipo_producto = 2)
 
 @app_view.route("/pianos.html")
 def pianos():
-    return render_template("instrumentos_de_cuerda/pianos.html")
-
-@app_view.route("/guitarras.html")
-def guitarras():
-    return render_template("instrumentos_de_cuerda/guitarras.html")
+    return render_template("instrumentos_de_cuerda/pianos.html", tipo_producto = 3)
 
 
 #percusion
-@app_view.route("/bateria_electronica.html")
-def bateria_electronica():
-    return render_template("percusion/bateria_electronica.html")
-
 @app_view.route("/bateria_acustica.html")
 def bateria_acustica():
-    return render_template("percusion/bateria_acustica.html")
+    return render_template("percusion/bateria_acustica.html", tipo_producto = 4)
+
+@app_view.route("/bateria_electronica.html")
+def bateria_electronica():
+    return render_template("percusion/bateria_electronica.html", tipo_producto = 5)
 
 
 #amplificadores
 @app_view.route("/cabezales.html")
 def cabezales():
-    return render_template("amplificadores/cabezales.html")
+    return render_template("amplificadores/cabezales.html", tipo_producto = 6)
 
 @app_view.route("/cajas.html")
 def cajas():
-    return render_template("amplificadores/cajas.html")
+    return render_template("amplificadores/cajas.html", tipo_producto = 7)
 
 
 #accesorios
 @app_view.route("/audifonos.html")
 def audifonos():
-    return render_template("accesorios/audifonos.html")
+    return render_template("accesorios/audifonos.html", tipo_producto = 8)
 
 @app_view.route("/monitores.html")
 def monitores():
-    return render_template("accesorios/monitores.html")
+    return render_template("accesorios/monitores.html", tipo_producto = 9)
 
 @app_view.route("/parlantes.html")
 def parlantes():
-    return render_template("accesorios/parlantes.html")
+    return render_template("accesorios/parlantes.html", tipo_producto = 10)
 
 @app_view.route("/cables.html")
 def cables():
-    return render_template("accesorios/cables.html")
+    return render_template("accesorios/cables.html", tipo_producto = 11)
 
 @app_view.route("/microfonos.html")
 def microfonos():
-    return render_template("accesorios/microfonos.html")
+    return render_template("accesorios/microfonos.html", tipo_producto = 12)
 
 @app_view.route("/interfaces.html")
 def interfaces():
-    return render_template("accesorios/interfaces.html")
+    return render_template("accesorios/interfaces.html", tipo_producto = 13)
 
 @app_view.route("/mixers.html")
 def mixers():
-    return render_template("accesorios/mixers.html")
+    return render_template("accesorios/mixers.html", tipo_producto = 14)
 
 #carrito
 @app_view.route("/checkout.html")

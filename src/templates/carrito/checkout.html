@@ -41,18 +41,6 @@
 		</template>
 	</div>
 
-	<!-- <div style="text-align: right; margin-top: 35px; ">
-		<div>
-			Total: <span id="tarifa"></span>
-		</div>
-		<button class="btn btn-default">
-			Tranformar Divisa
-		</button>
-		<button class="btn bg-custom" style="color: white; ">
-			Pagar
-		</button>
-	</div> -->
-
 	<div style="text-align: right; margin-block: 30px; font-size: 30px;">
 		<i id="tarifa_retart" class="glyphicon glyphicon-refresh spin" style="display:none;" aria-hidden="true"></i>
 		<span id="tarifa"></span>
@@ -68,8 +56,6 @@
 		</div>
 	</div>
 	<!-- //progress -->
-
-
 
 	<form id="formulario" method="POST" action="/redireccionarWebPay">
 		<input id="id" type="hidden" name="id" value="">
@@ -100,23 +86,11 @@
 	<br>
 </div>
 
-<!-- <style>
-	.mensaje {
-		margin-top: 50px;
-	}
-
-	@media (max-width: 768px) {
-		.mensaje {
-			margin-top: 0px;
-		}
-	}
-</style> -->
 <!-- alert_generic -->
 <div style="display: none;" class="alert alert-danger margin mensaje" role="alert">
 	{% include "resources/alert_generic.html" %}
 </div>
 <!-- //alert_generic -->
-<!-- //check out -->
 {% endblock %}
 
 {% block javascripts %}
@@ -221,18 +195,4 @@
 	})
 
 </script>
-
-<!--quantity-->
-<script>
-	$('.value-plus').on('click', function () {
-		var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) + 1;
-		divUpd.text(newVal);
-	});
-
-	$('.value-minus').on('click', function () {
-		var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) - 1;
-		if (newVal >= 1) divUpd.text(newVal);
-	});
-</script>
-<!--quantity-->
 {% endblock %}

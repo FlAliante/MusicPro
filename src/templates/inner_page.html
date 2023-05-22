@@ -54,6 +54,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   <!-- //footer -->
 
   {% block javascripts %}{% endblock %}
+
+  <script>
+    var tipo_producto = '{{tipo_producto}}'
+    $(function () {
+      generarTablaTipoProductos(tipo_producto)
+    })
+  </script>
 </body>
 
 </html>

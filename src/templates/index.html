@@ -48,7 +48,6 @@ License URL: http://creativecommons.org/licenses/by/3.0/
       <!-- productos -->
       {% include "resources/productos.html" %}
       <!-- //productos -->
-
     </div>
   </div>
 
@@ -65,6 +64,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   <!-- //login -->
 
   <!-- Specific Page JS goes HERE  -->
+  <script>
+    $(function () {
+      generarTablaTipoProductos(6)
+    })
+  </script>
   {% block javascripts %}{% endblock %}
 </body>
 
