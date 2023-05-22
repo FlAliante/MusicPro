@@ -1,243 +1,120 @@
 {% extends "inner_page.html" %}
 
-{% block stylesheets %}
-
-{% endblock %}
-
 {% block content %}
-<!-- check out -->
-<div class="checkout">
-	<div class="container">
-		<h3>My Shopping Bag</h3>
-		<div class="table-responsive checkout-right animated wow slideInUp" data-wow-delay=".5s">
-			<table class="timetable_sub">
-				<thead>
-					<tr>
-						<th>Remove</th>
-						<th>Product</th>
-						<th>Quantity</th>
-						<th>Product Name</th>
-						<th>Price</th>
-					</tr>
-				</thead>
-				<tr class="rem1">
-					<td class="invert-closeb">
-						<div class="rem">
-							<div class="close1"> </div>
-						</div>
-						<script>$(document).ready(function (c) {
-								$('.close1').on('click', function (c) {
-									$('.rem1').fadeOut('slow', function (c) {
-										$('.rem1').remove();
-									});
-								});
-							});
-						</script>
-					</td>
-					<td class="invert-image"><a href="single.html"><img src="static/images/w4.png" alt=" "
-								class="img-responsive" /></a></td>
-					<td class="invert">
-						<div class="quantity">
-							<div class="quantity-select">
-								<div class="entry value-minus">&nbsp;</div>
-								<div class="entry value"><span>1</span></div>
-								<div class="entry value-plus active">&nbsp;</div>
-							</div>
-						</div>
-					</td>
-					<td class="invert">Hand Bag</td>
-					<td class="invert">$45.99</td>
+<!-- Carrito Vacio -->
+<div id="carrito_msj" style="padding-top: 30px; display: none;">
+	<center>
+		<h3><span>Tu carrito </span>esta vacio</h3>
+		<img src="https://cdn-icons-png.flaticon.com/256/1170/1170576.png" width="180" alt="%nombre%"
+			class="img-responsive" />
+	</center>
+</div>
+<!-- Carrito Vacio -->
+
+<!-- alert_generic -->
+<div style="display: none; margin-bottom: 30px;" class="alert alert-danger margin mensaje alert-carrito" role="alert">
+	{% include "resources/alert_generic.html" %}
+</div>
+<!-- //alert_generic -->
+
+{% if error %}
+<!-- alert_generic -->
+<div style="display: none; margin-bottom: 30px;" class="alert alert-danger margin mensaje alert-carrito" role="alert">
+	{% include "resources/alert_generic.html" %}
+	<center>
+		<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"
+			style="font-size: 40px; transform: scale(1);"></span>
+	
+		<h4 class="alert-heading">Entramos un error!</h4>
+		<p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer
+			so
+			that you can see how spacing within an alert works with this kind of content.</p>
+		<hr>
+		<p class="mb-0" id="txtError">{{ msj }}</p>
+	</center>
+</div>
+<!-- //alert_generic -->
+{% endif %}
+
+
+<div id="carrito_tabla" style="display: none; font-family: 'Montserrat', sans-serif;">
+	<div class="table-responsive checkout-right animated wow slideInUp " data-wow-delay=".5s">
+		<table id="tabla" class="timetable_sub">
+			<thead>
+				<tr>
+					<th>Product</th>
+					<th>Product Name</th>
+					<th class="hide_responsive">Price</th>
 				</tr>
-				<tr class="rem2">
-					<td class="invert-closeb">
-						<div class="rem">
-							<div class="close2"> </div>
-						</div>
-						<script>$(document).ready(function (c) {
-								$('.close2').on('click', function (c) {
-									$('.rem2').fadeOut('slow', function (c) {
-										$('.rem2').remove();
-									});
-								});
-							});
-						</script>
-					</td>
-					<td class="invert-image"><a href="single.html"><img src="static/images/ep3.png" alt=" "
-								class="img-responsive" /></a></td>
-					<td class="invert">
-						<div class="quantity">
-							<div class="quantity-select">
-								<div class="entry value-minus">&nbsp;</div>
-								<div class="entry value"><span>1</span></div>
-								<div class="entry value-plus active">&nbsp;</div>
-							</div>
-						</div>
-					</td>
-					<td class="invert">Watches</td>
-					<td class="invert">$45.99</td>
+			</thead>
+		</table>
+		<template id="miNuevoElemento">
+			<tr>
+				<td>
+					<center>
+						<a href="#"><img width="100" src="%photo%" alt="%nombre%" class="img-responsive" /></a>
+					</center>
+					<b class="show_responsive">%format%</b>
+				</td>
+				<td class="">%nombre%</td>
+				<td class="hide_responsive"><b>%format%</b></td>
+			</tr>
+		</template>
+	</div>
 
-				</tr>
-				<tr class="rem3">
-					<td class="invert-closeb">
-						<div class="rem">
-							<div class="close3"> </div>
-						</div>
-						<script>$(document).ready(function (c) {
-								$('.close3').on('click', function (c) {
-									$('.rem3').fadeOut('slow', function (c) {
-										$('.rem3').remove();
-									});
-								});
-							});
-						</script>
-					</td>
-					<td class="invert-image"><a href="single.html"><img src="static/images/w2.png" alt=" "
-								class="img-responsive" /></a></td>
-					<td class="invert">
-						<div class="quantity">
-							<div class="quantity-select">
-								<div class="entry value-minus">&nbsp;</div>
-								<div class="entry value"><span>1</span></div>
-								<div class="entry value-plus active">&nbsp;</div>
-							</div>
-						</div>
-					</td>
-					<td class="invert">Sandals</td>
-					<td class="invert">$45.99</td>
+	<div style="text-align: right; margin-block: 30px; font-size: 30px;">
+		<i id="amount_retart" class="glyphicon glyphicon-refresh spin" style="display:none;" aria-hidden="true"></i>
+		<span id="amount"></span>
+	</div>
 
-				</tr>
-				<tr class="rem4">
-					<td class="invert-closeb">
-						<div class="rem">
-							<div class="close4"> </div>
-						</div>
-						<script>$(document).ready(function (c) {
-								$('.close4').on('click', function (c) {
-									$('.rem4').fadeOut('slow', function (c) {
-										$('.rem4').remove();
-									});
-								});
-							});
-						</script>
-					</td>
-					<td class="invert-image"><a href="single.html"><img src="static/images/w1.png" alt=" "
-								class="img-responsive" /></a></td>
-					<td class="invert">
-						<div class="quantity">
-							<div class="quantity-select">
-								<div class="entry value-minus">&nbsp;</div>
-								<div class="entry value"><span>1</span></div>
-								<div class="entry value-plus active">&nbsp;</div>
-							</div>
-						</div>
-					</td>
-					<td class="invert">Wedges</td>
-					<td class="invert">$45.99</td>
-
-				</tr>
-
-				<!--quantity-->
-				<script>
-					$('.value-plus').on('click', function () {
-						var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) + 1;
-						divUpd.text(newVal);
-					});
-
-					$('.value-minus').on('click', function () {
-						var divUpd = $(this).parent().find('.value'), newVal = parseInt(divUpd.text(), 10) - 1;
-						if (newVal >= 1) divUpd.text(newVal);
-					});
-				</script>
-				<!--quantity-->
-			</table>
-		</div>
-		<div class="checkout-left">
-
-			<div class="checkout-right-basket animated wow slideInRight" data-wow-delay=".5s">
-				<a href="mens.html"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span>Back To
-					Shopping</a>
-			</div>
-			<div class="checkout-left-basket animated wow slideInLeft" data-wow-delay=".5s">
-				<h4>Shopping basket</h4>
-				<ul>
-					<li>Hand Bag <i>-</i> <span>$45.99</span></li>
-					<li>Watches <i>-</i> <span>$45.99</span></li>
-					<li>Sandals <i>-</i> <span>$45.99</span></li>
-					<li>Wedges <i>-</i> <span>$45.99</span></li>
-					<li>Total <i>-</i> <span>$183.96</span></li>
-				</ul>
-			</div>
-			<div class="clearfix"> </div>
+	<!-- progress -->
+	<div id='carrito_progress' style="margin-top: 35px; display:none;">
+		<h4 style="text-align: right;">
+			Espere un momento...
+		</h4>
+		<div class='progress'>
+			<div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
 		</div>
 	</div>
-</div>
-<hr>
-<br>
-<br>
-<!-- //check out -->
-<!-- //product-nav -->
+	<!-- //progress -->
 
+	<form id="formulario" method="POST" action="/transaction_status">
+		<input id="url" type="hidden" name="url" value="">
+		<input id="token" type="hidden" name="token" value="">
+		<input id="amount_clp" type="hidden" name="amount_clp" value="$0">
+		<input id="amount_usd" type="hidden" name="amount_usd" value="$0">
+		<input id="carrito_productos" type="hidden" name="carrito_productos" value="">		
+
+		<div id="carrito_botones" style="display: none;">
+			<div id="btn_pagar" class="checkout-left-basket" style="cursor:pointer; margin-left: 10px;">
+				<h4>
+					Pagar
+				</h4>
+			</div>
+			<div id="btn_clp" style="display: none; cursor:pointer" class="checkout-left-basket">
+				<h4 style="background: black;">
+					Cambiar a CLP
+				</h4>
+			</div>
+
+			<div id="btn_usd" style="cursor:pointer" class="checkout-left-basket animated wow slideInLeft"
+				style="margin-left: 10px;">
+				<h4 style="background: black;">Cambiar a USD
+				</h4>
+			</div>
+		</div>
+	</form>
+</div>
 
 {% endblock %}
 
 {% block javascripts %}
-<script
-	src="https://unpkg.com/bootstrap-table@1.21.3/dist/extensions/custom-view/bootstrap-table-custom-view.js"></script>
 <script>
 	$(function () {
-		$("#myTable").bootstrapTable({
-			url: '/portfolio/list',
-			columns: [
-				{ field: 'description', sortable: true, title: 'Description' },
-				{ field: 'create_time', sortable: true, title: 'Create Time' },
-				{ field: 'update_time', sortable: true, title: 'Update Time' },
-				{ field: 'price', sortable: true, title: 'Price' },
-				{ field: 'photo', sortable: false, title: 'Photo' },
-				{ field: 'url_nintendo', sortable: false, title: 'Url Nintendo' }
-			],
-			showCustomView: true,
-			customView: (data) => {
-				// Agregamos el HTML para cargar los datos
-				var view = "";
-				var template = $("#profileTemplate").html();
-				var description_sort = "";
-				$.each(data, function (i, row) {
-					if (row.description.length > 15) {
-						description_sort = row.description.substring(0, 15) + "...";
-					}
-					view += template
-						.replace("%description%", row.description)
-						.replace("%description_sort%", description_sort)
-						.replace("%photo%", row.photo)
-						.replace("%photo_front%", row.photo)
-						.replace("%photo_back%", row.photo)
-				});
-				return `<div class="row">${view}</div>`;
-			},
-			loadingFontSize: "14px",
-			locale: 'es-CL',
-			//buttonsAlign: 'left',
-			search: true,
-			searchAlign: 'left',
-			sortable: true,
-			pageSize: 8,
-			pagination: true,
-			paginationPreText: 'Anterior',
-			paginationNextText: 'Siguiente',
-			paginationVAlign: "both",
-			//paginationParts: ["pageInfo", "pageInfoShort", "pageSize", "pageList"],
-			paginationParts: ["pageInfo", "pageList"],
-			onLoadSuccess: (number, size) => {
-				$(".progress").hide();
-				$(".search-input").show()
-			},
-			onPageChange: (number, size) => {
-				window.scrollTo(0, 0)
-			},
-		});
-
-		$(".fixed-table-body, .search-input").hide()
-		$("[name='customView']").click().remove();
+		generarTablaCarrito()
+		generarBotonPagar()
+		generarBotonUSD()
+		generarBotonCLP()
 	})
 </script>
 {% endblock %}

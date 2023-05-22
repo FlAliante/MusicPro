@@ -1,4 +1,5 @@
 # Crear un ambiente virtual y subir a Heroku. 
+(NO CONSIDERAR ESTE DOCUMENTO POR EL MOMENTO YA QUE ES DE OTRA PLANTILLA)
 Esta demo, esta construida para la implementación de otras tecnologías y vincularlas con Salesforce utilizando Python como nuestro lenguaje backend junto con su micro framework llamado Flask( https://flask.palletsprojects.com ) para la creación de páginas web y Simple Salesforce( https://pypi.org/project/simple-salesforce ) , una api que nos permite trabajar con  datos de Salesforce.
 
 <hr>
