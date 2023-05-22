@@ -1,59 +1,42 @@
-from flask import Blueprint, jsonify, make_response, redirect, render_template, request
-from sqlalchemy import engine_from_config
-from config import db_session, engine
+from flask import Blueprint, jsonify, make_response, redirect, render_template, request, url_for
+from config import db_session
 from src.models.model import Transaction, Venta, Producto
+from src.views.view import app_view
 import requests
 import json
 import random
-import datetime
-from sqlalchemy import text
+from datetime import datetime
 
-app_controller = Blueprint("view_cliente", __name__)
+app_controller = Blueprint("app_controller", __name__)
     
+#Creo las credenciales
+headers = {
+    "Tbk-Api-Key-Id": "597055555532",
+    "Tbk-Api-Key-Secret": "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
+    "Content-Type": "application/json"
+}
 
 # Doc API TRANSBANK https://www.transbankdevelopers.cl/referencia/webpay?l=http#confirmar-una-transaccion
-@app_controller.route("/pagar_transkbank", methods=["POST"])
-def pagar_transkbank():    
+@app_controller.route("/transaction_create", methods=["POST"])
+def  transaction_create():    
     try:
-        transaction = Transaction()
-        compra_productos=request.form['compra_productos']
-        db_session.add(transaction)
-        db_session.commit()
-
-        # el string JSON
-        json_string = compra_productos
-
-        # convertir el string JSON a una lista de objetos Python
-        lista_objetos = json.loads(json_string)
-
-        lista_ventas = []
-        # iterar sobre la lista con un for loop
-        for objeto in lista_objetos:
-            venta = Venta()
-            venta.id_producto = objeto['id']
-            venta.id_transaction = transaction.id
-            venta.amount_clp = objeto['format']
-            lista_ventas.append(venta)
-
-        fecha_actual = datetime.date.today()
-        fecha_formateada = fecha_actual.strftime("%d%m%Y")
+        # Armo el codigo
+        fecha_actual = datetime.now()
+        date = fecha_actual.strftime("%d%m%y")
+        hour = str(fecha_actual.hour).zfill(2)
+        minute = str(fecha_actual.minute).zfill(2)
+        second = str(fecha_actual.second).zfill(2)
+        code = f"{date}-{hour}{minute}{second}-{str(random.randint(100, 999))}"
 
         # Declaro URL
         url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions"
 
         # Creo el JSON
         payload = {
-            "buy_order": f"BUY{fecha_formateada}-MP{str(random.randint(100, 999))}-WP{str(random.randint(100, 999))}",
-            "session_id": f"SES{fecha_formateada}-MP{str(random.randint(100, 999))}-WP{str(random.randint(100, 999))}",
+            "buy_order": f"WPB{code}",
+            "session_id": f"WPS{code}",
             "amount": float(request.form["amount"]),
-            "return_url": f"{request.host_url}crear_commit/{transaction.id}" # http://127.0.0.1:5000/pagado/{buy_order}
-        }
-
-        #Creo las credenciales
-        headers = {
-            "Tbk-Api-Key-Id": "597055555532",
-            "Tbk-Api-Key-Secret": "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
-            "Content-Type": "application/json"
+            "return_url": f"{request.host_url}crear_commit" # http://127.0.0.1:5000/crear_commit
         }
 
         #Envio la solicitud
@@ -62,24 +45,31 @@ def pagar_transkbank():
         #Si no es estatus 200 lo saco del metodo
         if response.status_code != 200:
             return make_response(response.json(), response.status_code)
-            
-        #Rescato el resultado en formato json 
-        data = response.json()
-        token = data['token']
-        url = data['url']
-        url_create = f"{url}?token_ws={token}"
+        return response.json()
+    except Exception as e:
+        return make_response(str(e), 500), print(str(e))
+    finally:
+        db_session.close_all()
 
+
+@app_controller.route("/transaction_status", methods=["POST"])
+def transaction_status():
+    try:
         #Obtengo el estado de la transacion segun el token
-        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{token}"
+        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{request.form['token']}"
+ 
         response = requests.get(url, headers=headers)
-
         #Si no es estatus 200 lo saco del metodo
         if response.status_code != 200:
-            return make_response(response.json(), response.status_code)
-
-        #Obtengo el resultado segun formato
+            return render_template( response.json(), response.status_code)
+        
+        transaction = Transaction()
+        transaction.amount_clp=request.form['amount_clp']
+        transaction.amount_usd=request.form['amount_usd']
+        transaction.token=request.form['token']
+        transaction.url=f"{request.form['url']}?token_ws={request.form['token']}"
+        
         data = json.loads(response.content)
-
         transaction.amount=data['amount']
         transaction.status=data['status']
         transaction.buy_order=data['buy_order'] 
@@ -87,60 +77,44 @@ def pagar_transkbank():
         transaction.accounting_date=data['accounting_date']
         transaction.transaction_date=data['transaction_date']
         transaction.installments_number=data['installments_number']
-        transaction.amount_clp=request.form['amount_clp']
-        transaction.amount_usd=request.form['amount_usd']
-        transaction.token=token
-        transaction.url=url_create
+        db_session.add(transaction)
+        db_session.commit()
+
+        # convertir el string JSON a una lista de objetos Python
+        lista_objetos = json.loads(request.form['carrito_productos'])
+
+        lista_ventas = []
+        # iterar sobre la lista con un for loop
+        for objeto in lista_objetos:
+            venta = Venta()
+            venta.amount_clp = objeto['format']
+            venta.id_producto = objeto['id']
+            venta.id_transaction = transaction.id
+            lista_ventas.append(venta)
 
         db_session.add_all(lista_ventas)
         db_session.commit()
-        return jsonify(transaction.id)
-    
-    except Exception as e:
-        if transaction.id:
-            db_session.delete(transaction)
-            db_session.commit()
-        return make_response(str(e), 500), print(str(e))
-    finally:
-        db_session.close_all()
 
-
-@app_controller.route("/redireccionarWebPay", methods=["POST"])
-def redirect_to_web_pay():
-    try:
-        id = request.form["id"]
-        # filter_by trae por id y al agregar la función .scalar() al final de la consulta
-        # le indicamos a SQLAlchemy que solo deseamos obtener un valor escalar (en este caso, la URL) y no un objeto completo.  
-        url = db_session.query(Transaction).filter_by(id=id).first().url
         #4051 8856 0044 6623
-        return redirect(url)
+        return redirect(transaction.url)
     except Exception as e:
-        return make_response(str(e), 500), print(str(e))
+        contexto = { 'error': True, 'status': 500, 'msj': str(e) }
+        return render_template("carrito/pagado.html", **contexto)
     finally:
         db_session.close_all()
 
 
-@app_controller.route("/crear_commit/<id>")
-def crear_commit(id):
+@app_controller.route("/crear_commit")
+def crear_commit():
     try:
-        transaction = Transaction.query.get(id)
-
-        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{transaction.token}"
-
-        headers = {
-            "Tbk-Api-Key-Id": "597055555532",
-            "Tbk-Api-Key-Secret": "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
-            "Content-Type": "application/json"
-        }
+        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{request.args.get('token_ws')}"
         
         response = requests.put(url, headers=headers)
         if response.status_code != 200:
-            #return make_response(response.json(), response.status_code)
-            #return render_template("carrito/checkout.html")
-            return redirect(f"{request.host_url}checkout.html")
+            return redirect(url_for('app_view.checkout')) # Corregir y crear una pagina para excepciones
 
+        transaction = db_session.query(Transaction).filter_by(token=request.args.get('token_ws')).first()
         data = json.loads(response.content)
-
         transaction.vci = data['vci']
         transaction.authorization_code = data['authorization_code']
         transaction.payment_type_code = data['payment_type_code']
@@ -153,12 +127,9 @@ def crear_commit(id):
         transaction.accounting_date=data['accounting_date']
         transaction.transaction_date=data['transaction_date']
         transaction.installments_number=data['installments_number']
-
         #Con el commit actualizas la tabla
         db_session.commit()
-
-        return redirect(f"{request.host_url}pagado.html/{id}") 
-        #return render_template("carrito/pagado.html")
+        return redirect(url_for('app_controller.crear_pago', id=transaction.id))
     except Exception as e:
         return make_response(str(e), 500), print(str(e))
     finally:
@@ -175,7 +146,6 @@ def crear_pago(id):
             transaction = Transaction.query.get(id)
             if transaction:
                 #transaction.transaction_date = datetime.strptime(transaction.transaction_date, "%Y-%m-%dT%H:%M:%S.")
-                venta = db_session.query(Venta).filter(Venta.id_transaction == id).all()
                 productos = db_session.query(Producto.nombre, Producto.photo, Venta.amount_clp)\
                    .join(Venta, Producto.id == Venta.id_producto)\
                    .filter(Venta.id_transaction == transaction.id).all()

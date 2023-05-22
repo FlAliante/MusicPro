@@ -1,7 +1,6 @@
 {% extends "inner_page.html" %}
 
 {% block content %}
-
 <!-- check out -->
 <div class="container">
 
@@ -12,7 +11,6 @@
 			<br>
 			<img src="https://cdn-icons-png.flaticon.com/256/7286/7286142.png" width="180" alt="%description%"
 				class="img-responsive" />
-
 			<br>
 			<!-- <h3><span>Información de  </span>tu compra</h3> -->
 			<p><strong>Número de transacción:</strong> {{ transaction.id }}</p>
@@ -21,7 +19,6 @@
 			<p><strong>Total pagado:</strong> {{ transaction.amount_clp }}</p>
 
 			<br>
-
 
 			<div class="table-responsive checkout-right animated wow slideInUp " data-wow-delay=".5s">
 				<table id="tabla" class="timetable_sub">
@@ -47,25 +44,12 @@
 							<td class="hide_responsive"><b>{{ producto.amount_clp }}</b></td>
 						</tr>
 						{% endfor %}
-
 					</tbody>
 				</table>
 			</div>
-
-
-
-
-
-
-
-
 		</center>
 	</div>
 </div>
-
-
-<!-- Y así sucesivamente con los demás datos de la transacción -->
-
 <!-- //check out -->
 {% endblock %}
 
