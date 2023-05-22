@@ -25,9 +25,10 @@ generarTablaCarrito = () => {
                 .replaceAll('%photo%', producto.photo)
             tabla.append(html);
         });
-        $('#amount').text(`CLP ${$('#carrito_total').text()} `)
+        amount_format = $('#carrito_total').text()
+        $('#amount_view').text(`CLP ${amount_format} `)
+        $("#amount_clp").val(amount_format)
         $('#carrito_botones').show();
-        $("#amount_clp").val($('#carrito_total').text())
     } else {
         $('#carrito_msj').show();
     }
@@ -63,74 +64,52 @@ agregarAlCarrito = (precio, nombre, photo, id) => {
     $("#carrito_item").text(carrito_item).show();
 }
 
-
-
 // Crea el pago
 generarBotonPagar = () => $("#btn_pagar").on("click", function () {
     //Escondo botones
     $("#carrito_botones, .alert-danger").hide();
-    $("#carrito_progress, #amount_retart").show();
-    //Realizo llamado para consultar el codigo del producto
-    $.ajax({
-        method: "POST",
-        url: "/transaction_create",
-        dataType: "json",
-        data: {
-            amount: amount
-        },
-    }).done(function (response) {
-        //recibo el numero de orden y hago el submit para el redirect
-        $("#url").val(response.url);
-        $("#token").val(response.token);
-        $("#carrito_productos").val(carrito_productos);
-        $("#formulario").submit();
-    }).fail(function (jqXHR, textStatus) {
-        console.error(jqXHR.responseText);
-        $("#txtError").text(`${jqXHR.statusText} (${jqXHR.status})`);
-        $(".alert-danger").show();
-        $("#carrito_botones").show();
-        $("#carrito_progress").hide();
-    }).always(function () {
-        console.log("Petición AJAX completada.");
-    });
+    $("#carrito_progress").show();
+    $("#carrito_productos").val(carrito_productos);
+    $("#amount").val(carrito_total);
+    $("#formulario").submit();
 });
 
 generarBotonUSD = () => $("#btn_usd").on("click", function () {
     //Escondo botones
-    $("#carrito_botones, .alert-danger").hide();
+    $("#carrito_botones, .alert-danger, #error_server").hide();
+    //Muestro botones
     $("#carrito_progress, #amount_retart").show();
-
+    //Consulto a la api moneda
     $.ajax({
         url: "https://music-pro-api.herokuapp.com/api/exchange_rate",
         data: { amount_clp: carrito_total },
     }).done(function (response) {
-        // Haz algo con la respuesta...
-        $("#amount").text("USD " + response.format);
+        $("#amount_view").text(`USD ${response.format}`);
         $("#amount_usd").val(response.format);
         //amount = response.result
     }).fail(function (jqXHR, textStatus) {
-        console.error(textStatus);
-        console.error(jqXHR);
-        $("#txtError").text(
-            `${jqXHR.statusText}(${jqXHR.status}): ${jqXHR.responseText}`
-        );
+        $("#error_title").text(`${jqXHR.statusText}(${jqXHR.status})`);
+        $("#error_message").text(jqXHR.responseText);
         $(".alert-danger").show();
+        window.scrollTo(0, 0);
     }).always(function () {
         $("#btn_usd, #carrito_progress, #amount_retart").hide();
         $("#btn_clp, #carrito_botones").show();
     });
 });
 
-generarBotonCLP = () => $("#btn_clp").on("click", function () {
+generarBotonCLP = () => $("#btn_clp").on("click", function () {    
+    //Escondo botones
+    $("#carrito_botones, .alert-danger, #error_server").hide();
+    //Muestro botones
     $("#carrito_progress, #amount_retart").show();
-    $("#carrito_botones, .alert-danger").hide();
     // Agrega un retraso de 2 segundos
-    // Agrega las funciones a la cola
     $("#btn_clp, #btn_usd").delay(600).queue(function (next) {
-        $("#amount").text("CLP " + $("#carrito_total").text());
+        // Agrega las funciones a la cola
+        $("#amount_view").text("CLP " + $("#carrito_total").text());
         $("#btn_clp, #carrito_progress, #amount_retart").hide();
         $("#btn_usd, #carrito_botones").show();
-        amount = carrito_total;
+        //amount = carrito_total;
         next();
     });
 });
@@ -149,7 +128,6 @@ $(function () {
     if ($("#carrito_item").text() != 0) {
         $("#carrito_item").show();
     }
-
 
     $("#vaciar_carrito").on("click", function () {
         carrito_total = 0;

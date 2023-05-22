@@ -11,33 +11,20 @@
 </div>
 <!-- Carrito Vacio -->
 
-<!-- alert_generic -->
-<div style="display: none; margin-bottom: 30px;" class="alert alert-danger margin mensaje alert-carrito" role="alert">
-	{% include "resources/alert_generic.html" %}
-</div>
-<!-- //alert_generic -->
-
-{% if error %}
-<!-- alert_generic -->
-<div style="display: none; margin-bottom: 30px;" class="alert alert-danger margin mensaje alert-carrito" role="alert">
-	{% include "resources/alert_generic.html" %}
-	<center>
-		<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"
-			style="font-size: 40px; transform: scale(1);"></span>
-	
-		<h4 class="alert-heading">Entramos un error!</h4>
-		<p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer
-			so
-			that you can see how spacing within an alert works with this kind of content.</p>
-		<hr>
-		<p class="mb-0" id="txtError">{{ msj }}</p>
-	</center>
-</div>
-<!-- //alert_generic -->
-{% endif %}
-
-
 <div id="carrito_tabla" style="display: none; font-family: 'Montserrat', sans-serif;">
+	{% if error_title %}
+	<!-- alert_generic -->
+	<div style="margin-bottom: 30px;" class="alert alert-danger margin mensaje alert-carrito" role="alert">
+		{% include "resources/alert_generic.html" %}
+		<p id="error_server"><b>{{error_title}}</b> <br>{{ error_message }}</p>
+	</div>
+	<!-- //alert_generic -->
+	{% else %}
+	<div style="margin-bottom: 30px; display: none;" class="alert alert-danger margin mensaje alert-carrito" role="alert">
+		{% include "resources/alert_generic.html" %}
+	</div>
+	{% endif %}
+
 	<div class="table-responsive checkout-right animated wow slideInUp " data-wow-delay=".5s">
 		<table id="tabla" class="timetable_sub">
 			<thead>
@@ -64,26 +51,17 @@
 
 	<div style="text-align: right; margin-block: 30px; font-size: 30px;">
 		<i id="amount_retart" class="glyphicon glyphicon-refresh spin" style="display:none;" aria-hidden="true"></i>
-		<span id="amount"></span>
+		<span id="amount_view"></span>
 	</div>
 
-	<!-- progress -->
-	<div id='carrito_progress' style="margin-top: 35px; display:none;">
-		<h4 style="text-align: right;">
-			Espere un momento...
-		</h4>
-		<div class='progress'>
-			<div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
-		</div>
-	</div>
-	<!-- //progress -->
-
-	<form id="formulario" method="POST" action="/transaction_status">
+	<form id="formulario" method="POST" action="/transaction_create">
 		<input id="url" type="hidden" name="url" value="">
 		<input id="token" type="hidden" name="token" value="">
+		<input id="amount" type="hidden" name="amount" value="">
 		<input id="amount_clp" type="hidden" name="amount_clp" value="$0">
 		<input id="amount_usd" type="hidden" name="amount_usd" value="$0">
-		<input id="carrito_productos" type="hidden" name="carrito_productos" value="">		
+		<input id="carrito_productos" type="hidden" name="carrito_productos" value="">
+
 
 		<div id="carrito_botones" style="display: none;">
 			<div id="btn_pagar" class="checkout-left-basket" style="cursor:pointer; margin-left: 10px;">
@@ -104,6 +82,19 @@
 			</div>
 		</div>
 	</form>
+
+	<!-- progress -->
+	<div id='carrito_progress' style="margin-top: 35px; display:none;">
+		<h4 style="text-align: right;">
+			Espere un momento...
+		</h4>
+		<div class='progress'>
+			<div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
+		</div>
+	</div>
+	<!-- //progress -->
+
+
 </div>
 
 {% endblock %}

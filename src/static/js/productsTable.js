@@ -58,6 +58,7 @@ function generarTablaTipoProductos(tipo_producto) {
       return `<div class="row">${view}</div>`;
     },
   });
+  $(".fixed-table-body").hide()
 }
 
 function generarTablaProductoIndex() {
@@ -95,4 +96,5 @@ function generarTablaProductoIndex() {
       return `<div class="row">${view}</div>`;
     },
   });
+  $(".fixed-table-body").hide()
 }
