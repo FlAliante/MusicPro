@@ -1,0 +1,89 @@
+<!-- //for-mobile-apps -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+<!-- pignose css -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pignose.layerslider.css') }}" media="all">
+
+<!-- //pignose css -->
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}" media="all">
+
+<!-- //for bootstrap working -->
+<link href="//fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+
+<link
+  href="//fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,900,900italic,700italic"
+  rel="stylesheet" type="text/css" />
+
+<link href="https://unpkg.com/bootstrap-table@1.20.0/dist/bootstrap-table.min.css" rel="stylesheet">
+
+<style>
+  .bg-custom {
+    background-color: #fda30e;
+  }
+
+  .shadow {
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .format_nombre {
+    margin-bottom: 12px;
+    height: 60px;
+    padding-inline: 20px;
+  }
+
+  .font_custom {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    color: #fda30e;
+  }
+
+  .format_clp {
+    font-size: 25px;
+    font-family: 'Lato', sans-serif;
+    color: black;
+  }
+
+  @media (max-width: 768px) {
+    .font_custom {
+      font-size: 20px;
+    }
+  }
+
+  .show_responsive {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .hide_responsive {
+      display: none;
+    }
+
+    .show_responsive {
+      display: block;
+    }
+
+    #btn_pagar {
+      margin-left: 0px !important;
+    }
+
+    .format_nombre {
+      height: auto;
+    }
+  }
+
+  .spin {
+    animation-name: spin-animation;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+
+  @keyframes spin-animation {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

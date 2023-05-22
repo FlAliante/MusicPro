@@ -19,55 +19,57 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     content="Smart Shop Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
 
   <!--  CSS  -->
-  {% include "web_page/css.html" %}
-  <style>
-    .bg-custom {
-      background-color: #fda30e;
-    }
-  </style>
-  
+  {% include "resources/css.html" %}
+
   <!-- Specific Page CSS goes HERE  -->
   {% block stylesheets %}{% endblock %}
 
   <!--  JS  -->
-  {% include "web_page/js.html" %}
+  {% include "resources/js.html" %}
 </head>
 
 <body>
   <!-- header -->
-  {% include "web_page/header.html" %}
+  {% include "resources/header.html" %}
   <!-- //header -->
 
   <!-- banner -->
-  {% include "web_page/menu.html" %}
+  {% include "resources/menu.html" %}
   <!-- //banner -->
 
   <!-- content -->
-  {% include "web_page/content.html" %}
+  {% include "resources/content.html" %}
   <!-- //content -->
 
-  <!-- productos -->
-  {% include "web_page/productos.html" %}
-  <!-- //productos -->
+  <div class="new_arrivals">
+    <div class="container">
+      <h3><span>new </span>arrivals</h3>
+      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium</p>
+      <!-- productos -->
+      {% include "resources/productos.html" %}
+      <!-- //productos -->
+    </div>
+  </div>
 
   <!-- coupons -->
-  {% include "web_page/coupons.html" %}
+  {% include "resources/coupons.html" %}
   <!-- //coupons -->
 
   <!-- footer -->
-  {% include "web_page/footer.html" %}
+  {% include "resources/footer.html" %}
   <!-- //footer -->
 
   <!-- login -->
-  {% include "web_page/login.html" %}
+  {% include "resources/login.html" %}
   <!-- //login -->
 
-  <script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table.min.js"></script>
-  <script src="https://unpkg.com/bootstrap-table@1.21.3/dist/bootstrap-table-locale-all.min.js"></script>
-  <script src="https://unpkg.com/bootstrap-table@1.21.3/dist/extensions/custom-view/bootstrap-table-custom-view.js"></script>
   <!-- Specific Page JS goes HERE  -->
+  <script>
+    $(function () {
+      generarTablaTipoProductos(6)
+    })
+  </script>
   {% block javascripts %}{% endblock %}
-
 </body>
 
 </html>

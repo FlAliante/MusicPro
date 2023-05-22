@@ -1,110 +1,34 @@
 {% extends "inner_page.html" %}
 
-{% block stylesheets %}
-
-{% endblock %}
-
 {% block content %}
-<!-- title -->
-<div class="products-right">
-  <h5 class="mb-1">Pianos</h5>
+<!-- breadcrumb -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-dark text-white" style="background: black;">
+    <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Instrumentos de Cuerdas</li>
+    <li class="breadcrumb-item active" aria-current="page">Pianos</li>
+  </ol>
+</nav>
+<!-- //breadcrumb -->
+
+<!-- myTable -->
+<div id="divTabla" style="display: none;">
+  <table id="myTable"></table>
+  <template id="tableTemplate">
+    {% include "resources/card_table.html" %}
+  </template>
 </div>
-<!-- //title -->
+<!-- //myTable -->
 
 <!-- progress -->
-<div class='progress' style="margin-top: 15px;">
+<div class='progress'>
   <div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
 </div>
 <!-- //progress -->
 
-<!-- myTable -->
-<table id="myTable"></table>
-<template id="profileTemplate">
-  <div class="col-md-3 product-men mb-3" style="margin-bottom: 15px;">
-    <div class="men-pro-item simpleCart_shelfItem">
-      <div class="men-thumb-item">
-        <img src="static/images/piano.png" alt="" class="pro-image-front" />
-        <img src="static/images/piano.png" alt="" class="pro-image-back" />
-        <div class="men-cart-pro">
-          <div class="inner-men-cart-pro">
-            <a href="single.html" class="link-product-add-cart">Ver Producto</a>
-          </div>
-        </div>
-        <span class="product-new-top">New</span>
-      </div>
-      <div class="item-info-product">
-        <h4><a href="single.html" title="%description%">%description_sort%</a></h4>
-        <div class="info-product-price">
-          <span class="item_price">$45.99</span>
-          <del>$69.71</del>
-        </div>
-        <a href="#" class="item_add single-item hvr-outline-out button2">Agregar al Carrito</a>
-      </div>
-    </div>
-  </div>
-</template>
-<!-- //myTable -->
-
-{% endblock %}
-
-{% block javascripts %}
-<script
-  src="https://unpkg.com/bootstrap-table@1.21.3/dist/extensions/custom-view/bootstrap-table-custom-view.js"></script>
-<script>
-  $(function () {
-    $("#myTable").bootstrapTable({
-      url: '/portfolio/list',
-      columns: [
-        { field: 'description', sortable: true, title: 'Description' },
-        { field: 'create_time', sortable: true, title: 'Create Time' },
-        { field: 'update_time', sortable: true, title: 'Update Time' },
-        { field: 'price', sortable: true, title: 'Price' },
-        { field: 'photo', sortable: false, title: 'Photo' },
-        { field: 'url_nintendo', sortable: false, title: 'Url Nintendo' }
-      ],
-      showCustomView: true,
-      customView: (data) => {
-        // Agregamos el HTML para cargar los datos
-        var view = "";
-        var template = $("#profileTemplate").html();
-        var description_sort = "";
-        $.each(data, function (i, row) {
-          if (row.description.length > 15) {
-            description_sort = row.description.substring(0, 15) + "...";
-          }
-          view += template
-            .replace("%description%", row.description)
-            .replace("%description_sort%", description_sort)
-            .replace("%photo%", row.photo)
-            .replace("%photo_front%", row.photo)
-            .replace("%photo_back%", row.photo)
-        });
-        return `<div class="row">${view}</div>`;
-      },
-      loadingFontSize: "14px",
-      locale: 'es-CL',
-      //buttonsAlign: 'left',
-      search: true,
-      searchAlign: 'left',
-      sortable: true,
-      pageSize: 8,
-      pagination: true,
-      paginationPreText: 'Anterior',
-      paginationNextText: 'Siguiente',
-      paginationVAlign: "both",
-      //paginationParts: ["pageInfo", "pageInfoShort", "pageSize", "pageList"],
-      paginationParts: ["pageInfo", "pageList"],
-      onLoadSuccess: (number, size) => {
-        $(".progress").hide();
-        $(".search-input").show()
-      },
-      onPageChange: (number, size) => {
-        window.scrollTo(0, 0)
-      },
-    });
-
-    $(".fixed-table-body, .search-input").hide()
-    $("[name='customView']").click().remove();
-  })
-</script>
+<!-- alert_generic -->
+<div style="display: none;" class="alert alert-danger" role="alert">
+  {% include "resources/alert_generic.html" %}
+</div>
+<!-- //alert_generic -->
 {% endblock %}
