@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, make_response, redirect, render_template, request
 from sqlalchemy import engine_from_config
 from config import db_session, engine
-from src.models.model import Transaction, Venta
+from src.models.model import Transaction, Venta, Producto
 import requests
 import json
 import random
@@ -208,20 +208,10 @@ def pagadoasd(id):
         if id.isdigit():
             transaction = Transaction.query.get(id)
             if transaction:
-                ventas = Venta.query.filter(Venta.id_transaction == transaction.id).all()
                 #transaction.transaction_date = datetime.strptime(transaction.transaction_date, "%Y-%m-%dT%H:%M:%S.")
-                id_productos = []
-                for venta in ventas:
-                    id_productos.append(venta.id_producto)
-                consulta = text("SELECT producto.nombre as nombre, producto.photo as photo, venta.amount_clp as amount_clp FROM producto JOIN venta ON producto.id = venta.id_producto WHERE venta.id_transaction = " + id)
-                productos = db_session.execute(consulta, params={'id_productos': tuple(id_productos)})
-
-                # Crear la consulta con la cláusula WHERE IN
-                #consulta = text(" SELECT * FROM producto WHERE id IN :id_productos")
-
-                # Ejecutar la consulta con los IDs de transacción como parámetro
-                #productos = db_session.execute(consulta, params={'id_productos': tuple(id_productos)})
-                productos = productos.fetchall()
+                productos = db_session.query(Producto.nombre, Producto.photo, Venta.amount_clp)\
+                   .join(Venta, Producto.id == Venta.id_producto)\
+                   .filter(Venta.id_transaction == transaction.id).all()
 
                 return render_template("carrito/pagado.html", transaction = transaction, productos = productos)
             else:

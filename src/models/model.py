@@ -1,6 +1,6 @@
 from MySQLdb import TIMESTAMP
 import requests
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import DECIMAL, Column, Integer, String, DateTime
 from datetime import datetime
 from config import Base
 from sqlalchemy.sql import func
@@ -72,4 +72,31 @@ class Venta(Base):
         self.id_producto = None
         self.id_transaction = None
         self.amount_clp = None
+
+class Producto(Base):
+    __tablename__ = 'producto'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(50), nullable=False)
+    marca = Column(String(100), nullable=False)
+    precio = Column(DECIMAL(10, 2), nullable=False)
+    fecha_creacion = Column(DateTime, default=datetime.utcnow, nullable=False)
+    fecha_actualizacion = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    tipo_producto = Column(Integer, nullable=False)
+    photo = Column(String(500), nullable=False)
+
+    def __init__(self, nombre, precio, tipo_producto):
+        self.nombre = nombre
+        self.precio = precio
+        self.tipo_producto = tipo_producto
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "precio": str(self.precio),
+            "fecha_creacion": self.fecha_creacion,
+            "fecha_actualizacion": self.fecha_actualizacion,
+            "tipo_producto_id": self.tipo_producto_id
+        }
 
