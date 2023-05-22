@@ -5,11 +5,44 @@ from datetime import datetime
 from config import Base
 from sqlalchemy.sql import func
 
-headers = {
-        "Tbk-Api-Key-Id": "597055555532",
-        "Tbk-Api-Key-Secret": "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
-        "Content-Type": "application/json"
-}
+class Producto(Base):
+    __tablename__ = 'producto'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(50), nullable=False)
+    marca = Column(String(100), nullable=False)
+    precio = Column(DECIMAL(10, 2), nullable=False)
+    fecha_creacion = Column(DateTime, default=datetime.utcnow, nullable=False)
+    fecha_actualizacion = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    tipo_producto = Column(Integer, nullable=False)
+    photo = Column(String(500), nullable=False)
+
+    def __init__(self):
+        self.nombre = None
+        self.marca = None
+        self.precio = None
+        self.fecha_creacion = None
+        self.fecha_actualizacion = None
+        self.tipo_producto = None
+        self.photo = None
+
+class Venta(Base):
+    __tablename__ = 'venta'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    update_date = Column(DateTime, nullable=False,
+                            server_default=func.current_timestamp())
+    create_date = Column(nullable=False,
+                            server_default=func.current_timestamp(),
+                            onupdate=func.current_timestamp())
+    id_producto = Column(Integer)
+    id_transaction = Column(Integer)
+    amount_clp = Column(String(50))
+
+    def __init__(self):
+        self.id_producto = None
+        self.id_transaction = None
+        self.amount_clp = None
 
 class Transaction(Base):
     __tablename__ = 'transactions'
@@ -28,7 +61,6 @@ class Transaction(Base):
     buy_order = Column(String(20))
     session_id = Column(String(20))
     card_detail = Column(String(100))
-    
     accounting_date = Column(String(4))
     transaction_date = Column(DateTime)
     authorization_code = Column(String(20))
@@ -54,49 +86,3 @@ class Transaction(Base):
         self.installments_number = None
         self.token = None
         self.url = None
-
-class Venta(Base):
-    __tablename__ = 'venta'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    update_date = Column(DateTime, nullable=False,
-                            server_default=func.current_timestamp())
-    create_date = Column(nullable=False,
-                            server_default=func.current_timestamp(),
-                            onupdate=func.current_timestamp())
-    id_producto = Column(Integer)
-    id_transaction = Column(Integer)
-    amount_clp = Column(String(50))
-
-    def __init__(self):
-        self.id_producto = None
-        self.id_transaction = None
-        self.amount_clp = None
-
-class Producto(Base):
-    __tablename__ = 'producto'
-
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    nombre = Column(String(50), nullable=False)
-    marca = Column(String(100), nullable=False)
-    precio = Column(DECIMAL(10, 2), nullable=False)
-    fecha_creacion = Column(DateTime, default=datetime.utcnow, nullable=False)
-    fecha_actualizacion = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    tipo_producto = Column(Integer, nullable=False)
-    photo = Column(String(500), nullable=False)
-
-    def __init__(self, nombre, precio, tipo_producto):
-        self.nombre = nombre
-        self.precio = precio
-        self.tipo_producto = tipo_producto
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "nombre": self.nombre,
-            "precio": str(self.precio),
-            "fecha_creacion": self.fecha_creacion,
-            "fecha_actualizacion": self.fecha_actualizacion,
-            "tipo_producto_id": self.tipo_producto_id
-        }
-
