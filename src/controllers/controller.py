@@ -16,7 +16,7 @@ headers = {
     "Content-Type": "application/json"
 }
 
-# Doc API TRANSBANK https://www.transbankdevelopers.cl/referencia/webpay?l=http#confirmar-una-transaccion
+# Doc API TRANSBANK https://www.transbankdevelopers.cl/referencia/webpay?l=http#crear-una-transaccion
 @app_controller.route("/transaction_create", methods=["POST"])
 def  transaction_create():    
     try:
@@ -51,7 +51,7 @@ def  transaction_create():
     finally:
         db_session.close_all()
 
-
+# Doc API TRANSBANK https://www.transbankdevelopers.cl/referencia/webpay?l=http#obtener-estado-de-una-transaccion
 @app_controller.route("/transaction_status", methods=["POST"])
 def transaction_status():
     try:
@@ -103,7 +103,7 @@ def transaction_status():
     finally:
         db_session.close_all()
 
-
+# https://www.transbankdevelopers.cl/referencia/webpay?l=http#crear-una-transaccion
 @app_controller.route("/crear_commit")
 def crear_commit():
     try:
