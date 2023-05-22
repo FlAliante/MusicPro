@@ -33,43 +33,34 @@ License URL: http://creativecommons.org/licenses/by/3.0/
   {% include "resources/header.html" %}
   <!-- //header -->
 
-  <!-- banner -->
+  <!-- login -->
+  {% include "resources/login.html" %}
+  <!-- //login -->
+
+  <!-- menu -->
   {% include "resources/menu.html" %}
-  <!-- //banner -->
+  <!-- //menu -->
 
-  <!-- content -->
-  {% include "resources/content.html" %}
-  <!-- //content -->
-
-  <div class="new_arrivals">
+  <div class="new_arrivals" style="padding-top: 30px;">
     <div class="container">
-      <h3><span>new </span>arrivals</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium</p>
-      <!-- productos -->
-      {% include "resources/productos.html" %}
-      <!-- //productos -->
+      {% block content %}
+
+      {% endblock %}
     </div>
   </div>
-
-  <!-- coupons -->
-  {% include "resources/coupons.html" %}
-  <!-- //coupons -->
 
   <!-- footer -->
   {% include "resources/footer.html" %}
   <!-- //footer -->
 
-  <!-- login -->
-  {% include "resources/login.html" %}
-  <!-- //login -->
+  {% block javascripts %}{% endblock %}
 
-  <!-- Specific Page JS goes HERE  -->
   <script>
+    var tipo_producto = '{{tipo_producto}}'
     $(function () {
-      generarTablaTipoProductos(6)
+      generarTablaTipoProductos(tipo_producto)
     })
   </script>
-  {% block javascripts %}{% endblock %}
 </body>
 
 </html>

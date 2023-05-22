@@ -1,0 +1,27 @@
+{% extends "inner-page.html" %}
+
+{% block stylesheets %}
+<!-- bootstrap CSS only -->
+<link href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
+<style>
+    .ph-item,
+    .ph-picture {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+
+<script src="{{url_for('static', filename='js/property/properties.js')}}"></script>
+
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "inner_page.html" %}
+
+{% block content %}
+<!-- Carrito Vacio -->
+<div id="carrito_msj" style="padding-top: 30px; display: none;">
+	<center>
+		<h3><span>Tu carrito </span>esta vacio</h3>
+		<img src="https://cdn-icons-png.flaticon.com/256/1170/1170576.png" width="180" alt="%nombre%"
+			class="img-responsive" />
+	</center>
+</div>
+<!-- Carrito Vacio -->
+
+<!-- alert_generic -->
+<div style="display: none; margin-bottom: 30px;" class="alert alert-danger margin mensaje alert-carrito" role="alert">
+	{% include "resources/alert_generic.html" %}
+</div>
+<!-- //alert_generic -->
+
+{% if error %}
+<!-- alert_generic -->
+<div style="display: none; margin-bottom: 30px;" class="alert alert-danger margin mensaje alert-carrito" role="alert">
+	{% include "resources/alert_generic.html" %}
+	<center>
+		<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"
+			style="font-size: 40px; transform: scale(1);"></span>
+	
+		<h4 class="alert-heading">Entramos un error!</h4>
+		<p>Aww yeah, you successfully read this important alert message. This example text is going to run a bit longer
+			so
+			that you can see how spacing within an alert works with this kind of content.</p>
+		<hr>
+		<p class="mb-0" id="txtError">{{ msj }}</p>
+	</center>
+</div>
+<!-- //alert_generic -->
+{% endif %}
+
+
+<div id="carrito_tabla" style="display: none; font-family: 'Montserrat', sans-serif;">
+	<div class="table-responsive checkout-right animated wow slideInUp " data-wow-delay=".5s">
+		<table id="tabla" class="timetable_sub">
+			<thead>
+				<tr>
+					<th>Product</th>
+					<th>Product Name</th>
+					<th class="hide_responsive">Price</th>
+				</tr>
+			</thead>
+		</table>
+		<template id="miNuevoElemento">
+			<tr>
+				<td>
+					<center>
+						<a href="#"><img width="100" src="%photo%" alt="%nombre%" class="img-responsive" /></a>
+					</center>
+					<b class="show_responsive">%format%</b>
+				</td>
+				<td class="">%nombre%</td>
+				<td class="hide_responsive"><b>%format%</b></td>
+			</tr>
+		</template>
+	</div>
+
+	<div style="text-align: right; margin-block: 30px; font-size: 30px;">
+		<i id="amount_retart" class="glyphicon glyphicon-refresh spin" style="display:none;" aria-hidden="true"></i>
+		<span id="amount"></span>
+	</div>
+
+	<!-- progress -->
+	<div id='carrito_progress' style="margin-top: 35px; display:none;">
+		<h4 style="text-align: right;">
+			Espere un momento...
+		</h4>
+		<div class='progress'>
+			<div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
+		</div>
+	</div>
+	<!-- //progress -->
+
+	<form id="formulario" method="POST" action="/transaction_status">
+		<input id="url" type="hidden" name="url" value="">
+		<input id="token" type="hidden" name="token" value="">
+		<input id="amount_clp" type="hidden" name="amount_clp" value="$0">
+		<input id="amount_usd" type="hidden" name="amount_usd" value="$0">
+		<input id="carrito_productos" type="hidden" name="carrito_productos" value="">		
+
+		<div id="carrito_botones" style="display: none;">
+			<div id="btn_pagar" class="checkout-left-basket" style="cursor:pointer; margin-left: 10px;">
+				<h4>
+					Pagar
+				</h4>
+			</div>
+			<div id="btn_clp" style="display: none; cursor:pointer" class="checkout-left-basket">
+				<h4 style="background: black;">
+					Cambiar a CLP
+				</h4>
+			</div>
+
+			<div id="btn_usd" style="cursor:pointer" class="checkout-left-basket animated wow slideInLeft"
+				style="margin-left: 10px;">
+				<h4 style="background: black;">Cambiar a USD
+				</h4>
+			</div>
+		</div>
+	</form>
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+	$(function () {
+		generarTablaCarrito()
+		generarBotonPagar()
+		generarBotonUSD()
+		generarBotonCLP()
+	})
+</script>
+{% endblock %}

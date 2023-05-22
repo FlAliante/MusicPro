@@ -227,7 +227,7 @@ label{
     padding: 0px 0;
 }
 .dropdown-menu.columns-3 {
-    min-width: 700px;
+    min-width: 400px;
     padding: 30px 30px;
 }
 .multi-gd-img img{
@@ -1258,7 +1258,7 @@ h2.resp-accordion {
     width: 100%;
 }
 .product-easy {
-    padding: 90px 0;
+    padding-bottom: 90px 0;
 }
 /*-- effect --*/
 .men-pro-item {
@@ -1386,7 +1386,7 @@ h2.resp-accordion {
     transform: rotateY(0deg);
     opacity: 1;
     visibility: visible;
-    background: #f7f7f7;
+    /* background: #f7f7f7; */
 }
 .men-thumb-item img {
     transition: all 0.5s ease-out 0s;
@@ -2817,7 +2817,7 @@ td.invert-image a img {
 .checkout-left-basket {
     float: right;
     width: 25%;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
 }
 .checkout-right-basket{
 	float: left;

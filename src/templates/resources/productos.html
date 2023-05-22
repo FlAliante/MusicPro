@@ -1,0 +1,22 @@
+<!-- progress -->
+<div class='progress' style="margin-top: 45px;">
+  <div class="progress-bar bg-custom progress-bar-striped active" style="width:100%"></div>
+</div>
+<!-- //progress -->
+
+<!-- myTable -->
+<table id="myTable"></table>
+<template id="tableTemplate">
+  {% include "resources/card_table.html" %}
+</template>
+<!-- //myTable -->
+
+{% block javascripts %}
+<script>
+  $(function () {
+    generarTablaProductoIndex()
+  })
+</script>
+{% endblock %}
+
+

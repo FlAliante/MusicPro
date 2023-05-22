@@ -1,0 +1,147 @@
+<div class="ban-top">
+  <div class="container">
+    <div class="top_nav_left">
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse menu--shylock" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav menu__list">
+              <li class="menu__item ">
+                <a class="menu__link" href="{{ url_for('app_view.index') }}">
+                  Inicio
+                </a>
+              </li>
+              <!-- Instrumentos de Cuerdas -->
+              <li class="dropdown menu__item">
+                <a href="#" class="dropdown-toggle menu__link" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">
+                  Instrumentos de Cuerdas
+                  <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu multi-column columns-3">
+                  <div class="row">
+
+                    <div class="col-sm-6 multi-gd-img">
+                      <ul class="multi-column-dropdown">
+                        <li><a href="{{ url_for('app_view.guitarras') }}">Guitarras</a></li>
+                        <li><a href="{{ url_for('app_view.bajos') }}">Bajos</a></li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-6 multi-gd-img">
+                      <ul class="multi-column-dropdown">
+                        <li><a href="{{ url_for('app_view.pianos') }}">Pianos</a></li>
+                      </ul>
+                    </div>
+
+                    <div class="clearfix"></div>
+                  </div>
+                </ul>
+              </li>
+              <!-- Percusión -->
+              <li class="dropdown menu__item">
+                <a href="#" class="dropdown-toggle menu__link" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">Percusión <span class="caret"></span></a>
+                <ul class="dropdown-menu multi-column columns-3">
+                  <div class="row">
+                    <div class="col-sm-6 multi-gd-img">
+                      <ul class="multi-column-dropdown">
+                        <li><a href="{{ url_for('app_view.bateria_acustica') }}">Baterías Acústicas</a></li>
+                      </ul>
+                    </div>
+
+                    <div class="col-sm-6 multi-gd-img">
+                      <ul class="multi-column-dropdown">
+                        <li><a href="{{ url_for('app_view.bateria_electronica') }}">Baterías Electrónica</a></li>
+                      </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+                </ul>
+              </li>
+              <!-- Amplificadores -->
+              <li class="dropdown menu__item">
+                <a href="#" class="dropdown-toggle menu__link" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">Amplificadores <span class="caret"></span></a>
+                <ul class="dropdown-menu multi-column columns-3">
+                  <div class="row">
+                    <div class="col-sm-6 multi-gd-img">
+                      <ul class="multi-column-dropdown">
+                        <li><a href="{{ url_for('app_view.cabezales') }}">Cabezales</a></li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-6 multi-gd-img">
+                      <ul class="multi-column-dropdown">
+                        <li><a href="{{ url_for('app_view.cajas') }}">Cajas</a></li>
+                      </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+                </ul>
+              </li>
+              <!-- Accesorios -->
+              <li class="dropdown menu__item">
+                <a href="#" class="dropdown-toggle menu__link" data-toggle="dropdown" role="button" aria-haspopup="true"
+                  aria-expanded="false">Accesorios <span class="caret"></span></a>
+                <ul class="dropdown-menu multi-column columns-3">
+                  <div class="row">
+                    <div class="col-sm-6 multi-gd-img">
+                      <ul class="multi-column-dropdown">
+                        <li><a href="{{ url_for('app_view.audifonos') }}">Audífonos</a></li>
+                        <li><a href="{{ url_for('app_view.monitores') }}">Monitores</a></li>
+                        <li><a href="{{ url_for('app_view.parlantes') }}">Parlantes</a></li>
+                        <li><a href="{{ url_for('app_view.cables') }}">Cables</a></li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-6 multi-gd-img">
+                      <ul class="multi-column-dropdown">
+                        <li><a href="{{ url_for('app_view.microfonos') }}">Micrófonos</a></li>
+                        <li><a href="{{ url_for('app_view.interfaces') }}">Interfaces</a></li>
+                        <li><a href="{{ url_for('app_view.mixers') }}">Mixers</a></li>
+                      </ul>
+                    </div>
+                    <div class="clearfix"></div>
+                  </div>
+                </ul>
+              </li>
+              <!-- <li class="menu__item">
+                <a class="menu__link" href="contact.html">contact</a>
+              </li> -->
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="top_nav_right">
+      <div class="cart box_1">
+        <a href="{{ url_for('app_view.checkout') }}">
+          <h3>
+            <div class="total">
+              <span class="badge bg-danger" style="background-color: rgba(255, 0, 0, 0.5); display: none;"
+                id="carrito_item">0</span>
+
+              <i class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></i>
+
+              <!-- <span class="simpleCart_total"></span> (<span id="simpleCart_quantity" class="simpleCart_quantity"></span> items) -->
+              <span id="carrito_total"></span>
+
+            </div>
+          </h3>
+        </a>
+        <p>
+          <a id="vaciar_carrito" style="cursor: pointer;" class="simpleCart_empty">Vaciar Carrito</a>
+        </p>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</div>
