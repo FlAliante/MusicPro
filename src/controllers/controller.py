@@ -1,11 +1,12 @@
 from flask import Blueprint, jsonify, make_response, redirect, render_template, request
 from sqlalchemy import engine_from_config
 from config import db_session, engine
-from src.models.model import Transaction
+from src.models.model import Transaction, Venta
 import requests
 import json
 import random
 import datetime
+from sqlalchemy import text
 
 app_controller = Blueprint("view_cliente", __name__)
 
@@ -42,14 +43,76 @@ def get_productos():
         print(error)
         return make_response(error, 500)
     
+@app_controller.route("/crear_commit/<id>")
+def crear_commit(id):
+    try:
+        transaction = Transaction.query.get(id)
+
+        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{transaction.token}"
+
+        headers = {
+            "Tbk-Api-Key-Id": "597055555532",
+            "Tbk-Api-Key-Secret": "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
+            "Content-Type": "application/json"
+        }
+        
+        response = requests.put(url, headers=headers)
+        if response.status_code != 200:
+            #return make_response(response.json(), response.status_code)
+            #return render_template("carrito/checkout.html")
+            return redirect(f"{request.host_url}checkout.html")
+
+        data = json.loads(response.content)
+
+        transaction.vci = data['vci']
+        transaction.authorization_code = data['authorization_code']
+        transaction.payment_type_code = data['payment_type_code']
+        transaction.response_code = data['response_code']
+        transaction.card_detail = data['card_detail']
+        transaction.amount=data['amount']
+        transaction.status=data['status']
+        transaction.buy_order=data['buy_order'] 
+        transaction.session_id=data['session_id'] 
+        transaction.accounting_date=data['accounting_date']
+        transaction.transaction_date=data['transaction_date']
+        transaction.installments_number=data['installments_number']
+
+        #Con el commit actualizas la tabla
+        db_session.commit()
+
+        return redirect(f"{request.host_url}pagado.html/{id}") 
+        #return render_template("carrito/pagado.html")
+    except Exception as e:
+        return make_response(str(e), 500), print(str(e))
+    finally:
+        db_session.close_all()
+
 
 # Doc API TRANSBANK https://www.transbankdevelopers.cl/referencia/webpay?l=http#confirmar-una-transaccion
 @app_controller.route("/pagar_transkbank", methods=["POST"])
 def pagar_transkbank():    
     try:
         transaction = Transaction()
+        compra_productos=request.form['compra_productos']
         db_session.add(transaction)
         db_session.commit()
+
+        # el string JSON
+        json_string = compra_productos
+
+        # convertir el string JSON a una lista de objetos Python
+        lista_objetos = json.loads(json_string)
+
+        lista_ventas = []
+        # iterar sobre la lista con un for loop
+        for objeto in lista_objetos:
+            venta = Venta()
+            venta.id_producto = objeto['id']
+            venta.id_transaction = transaction.id
+            venta.amount_clp = objeto['format']
+            lista_ventas.append(venta)
+
+
 
         fecha_actual = datetime.date.today()
         fecha_formateada = fecha_actual.strftime("%d%m%Y")
@@ -62,7 +125,7 @@ def pagar_transkbank():
             "buy_order": f"BUY{fecha_formateada}-MP{str(random.randint(100, 999))}-WP{str(random.randint(100, 999))}",
             "session_id": f"SES{fecha_formateada}-MP{str(random.randint(100, 999))}-WP{str(random.randint(100, 999))}",
             "amount": float(request.form["amount"]),
-            "return_url": f"{request.host_url}pagado/{transaction.id}" # http://127.0.0.1:5000/pagado/{buy_order}
+            "return_url": f"{request.host_url}crear_commit/{transaction.id}" # http://127.0.0.1:5000/pagado/{buy_order}
         }
 
         #Creo las credenciales
@@ -108,6 +171,9 @@ def pagar_transkbank():
         transaction.token=token
         transaction.url=url_create
 
+ 
+
+        db_session.add_all(lista_ventas)
         db_session.commit()
         return jsonify(transaction.id)
     
@@ -135,44 +201,33 @@ def redireccionarWebPay():
 
 
 #'BUY106-MP468-WP550'
-@app_controller.route("/pagado/<id>")
+@app_controller.route("/pagado.html/<id>")
 def pagadoasd(id):
     try:
-        transaction = Transaction.query.get(id)
+        # hacer algo si my_string no es un número entero válido
+        if id.isdigit():
+            transaction = Transaction.query.get(id)
+            if transaction:
+                ventas = Venta.query.filter(Venta.id_transaction == transaction.id).all()
+                #transaction.transaction_date = datetime.strptime(transaction.transaction_date, "%Y-%m-%dT%H:%M:%S.")
+                id_productos = []
+                for venta in ventas:
+                    id_productos.append(venta.id_producto)
+                consulta = text("SELECT producto.nombre as nombre, producto.photo as photo, venta.amount_clp as amount_clp FROM producto JOIN venta ON producto.id = venta.id_producto WHERE venta.id_transaction = " + id)
+                productos = db_session.execute(consulta, params={'id_productos': tuple(id_productos)})
 
-        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{transaction.token}"
+                # Crear la consulta con la cláusula WHERE IN
+                #consulta = text(" SELECT * FROM producto WHERE id IN :id_productos")
 
-        headers = {
-            "Tbk-Api-Key-Id": "597055555532",
-            "Tbk-Api-Key-Secret": "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
-            "Content-Type": "application/json"
-        }
-        
-        response = requests.put(url, headers=headers)
-        if response.status_code != 200:
-            #return make_response(response.json(), response.status_code)
-            #return render_template("carrito/checkout.html")
-            return redirect(f"{request.host_url}checkout.html")
+                # Ejecutar la consulta con los IDs de transacción como parámetro
+                #productos = db_session.execute(consulta, params={'id_productos': tuple(id_productos)})
+                productos = productos.fetchall()
 
-        data = json.loads(response.content)
-
-        transaction.vci = data['vci']
-        transaction.authorization_code = data['authorization_code']
-        transaction.payment_type_code = data['payment_type_code']
-        transaction.response_code = data['response_code']
-        transaction.card_detail = data['card_detail']
-        transaction.amount=data['amount']
-        transaction.status=data['status']
-        transaction.buy_order=data['buy_order'] 
-        transaction.session_id=data['session_id'] 
-        transaction.accounting_date=data['accounting_date']
-        transaction.transaction_date=data['transaction_date']
-        transaction.installments_number=data['installments_number']
-
-        #Con el commit actualizas la tabla
-        db_session.commit()
-
-        return redirect(request.host_url + "pagado.html") # render_template("carrito/pagado.html")
+                return render_template("carrito/pagado.html", transaction = transaction, productos = productos)
+            else:
+                return redirect(request.host_url + "index.html") 
+        else:  
+            return redirect(request.host_url + "index.html")      
     except Exception as e:
         return make_response(str(e), 500), print(str(e))
     finally:

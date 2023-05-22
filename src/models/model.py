@@ -1,3 +1,4 @@
+from MySQLdb import TIMESTAMP
 import requests
 from sqlalchemy import Column, Integer, String, DateTime
 from datetime import datetime
@@ -54,70 +55,21 @@ class Transaction(Base):
         self.token = None
         self.url = None
 
-    def __init__(self, amount = None, amount_clp = None, amount_usd = None, status = None, buy_order = None, session_id = None, transaction_date = None,  accounting_date = None, card_detail = None, installments_number = None, payment_type_code = None, authorization_code=None, response_code=None, vci = None, token=None, url=None):
-        self.vci = vci
-        self.amount = amount
-        self.amount_clp = amount_clp
-        self.amount_usd = amount_usd
-        self.status = status
-        self.buy_order = buy_order
-        self.session_id = session_id
-        self.accounting_date = accounting_date
-        self.transaction_date = transaction_date
-        self.authorization_code = authorization_code
-        self.payment_type_code = payment_type_code
-        self.response_code = response_code
-        self.installments_number = installments_number
-        self.token = token
-        self.url = url
-
-    # Doc API TRANSBANK https://www.transbankdevelopers.cl/referencia/webpay?l=http#confirmar-una-transaccion
-    def transaction_create(buy_order, session_id, amount, return_url):
-        # Declaro URL
-        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions"
-        # Creo el JSON
-        payload = {
-            "buy_order": buy_order,
-            "session_id": session_id,
-            "amount": amount,
-            "return_url": return_url
-        }
-        #Envio la solicitud
-        response = requests.post(url, json=payload, headers=headers)
-        return response
-
-    def transaction_status(token):
-    #Obtengo el detalle de la transaccion   
-        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{token}"
-        response = requests.get(url, headers=headers)
-        return response
-
-    def transaction_commit(token):
-    #Obtengo el detalle de la transaccion   
-        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{token}"
-        response = requests.put(url, headers=headers)
-        return response
-
-class User(Base):
-    __tablename__ = 'app_user'
+class Venta(Base):
+    __tablename__ = 'venta'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String(255))
-    email = Column(String(255))
-    password = Column(String(255))
+    update_date = Column(DateTime, nullable=False,
+                            server_default=func.current_timestamp())
+    create_date = Column(nullable=False,
+                            server_default=func.current_timestamp(),
+                            onupdate=func.current_timestamp())
+    id_producto = Column(Integer)
+    id_transaction = Column(Integer)
+    amount_clp = Column(String(50))
 
-    def __init__(self, username, email, password):
-        self.username = username
-        self.email = email
-        self.password = password
-
-    def to_json(self):
-        return {
-            'id': self.id,
-            'username': self.username,
-            'email': self.email,
-            'password': self.password
-        }
-
-
+    def __init__(self):
+        self.id_producto = None
+        self.id_transaction = None
+        self.amount_clp = None
 

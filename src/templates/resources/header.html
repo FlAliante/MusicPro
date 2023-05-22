@@ -22,7 +22,7 @@
   <div class="container">
     <div class="col-md-3 header-left">
       <h1>
-        <a href="index.html"><img src="static/images/logo3.jpg" /></a>
+        <a href="{{ url_for('app_view.index') }}"><img src="{{ url_for('static', filename='images/logo3.jpg') }}"></a>
       </h1>
     </div>
     <div class="col-md-6">

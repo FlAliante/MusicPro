@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, make_response, render_template, request
+from flask import Blueprint, jsonify, make_response, redirect, render_template, request
 import json
 from config import db_session
 from sqlalchemy import asc, desc
@@ -15,6 +15,11 @@ def page_internal_error(e):
 @app_view.errorhandler(404)
 def page_not_found(e):
     return render_template("pages-error-404.html") """
+
+@app_view.errorhandler(404)
+def page_not_found(e):
+    # redirigir a la página de inicio
+    return redirect("/", code=302)
 
 @app_view.route("/")
 @app_view.route("/index.html")

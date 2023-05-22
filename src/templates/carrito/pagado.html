@@ -12,12 +12,66 @@
 			<br>
 			<img src="https://cdn-icons-png.flaticon.com/256/7286/7286142.png" width="180" alt="%description%"
 				class="img-responsive" />
+
+			<br>
+			<!-- <h3><span>Información de  </span>tu compra</h3> -->
+			<p><strong>Número de transacción:</strong> {{ transaction.id }}</p>
+			<p><strong>Numero de Orden:</strong> {{ transaction.buy_order }}</p>
+			<p><strong>Fecha de la transacción:</strong> {{ transaction.transaction_date }}</p>
+			<p><strong>Total pagado:</strong> {{ transaction.amount_clp }}</p>
+
+<br>
+
+
+			<div class="table-responsive checkout-right animated wow slideInUp " data-wow-delay=".5s">
+				<table id="tabla" class="timetable_sub">
+					<thead>
+						<tr>
+							<th>Product</th>
+							<th>Product Name</th>
+							<th class="hide_responsive">Price</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for producto in productos %}
+						<tr>
+							<td>
+								<center>
+									<a href="#"><img width="100" src="{{ producto.photo }}" alt="{{ producto.nombre }}" class="img-responsive" /></a>
+								</center>
+			
+								<b class="show_responsive">{{ producto.amount_clp }}</b>
+							</td>
+							<td class="">{{ producto.nombre }}</td>
+							<td class="hide_responsive"><b>{{ producto.amount_clp }}</b></td>
+						</tr>
+						{% endfor %}
+
+					</tbody>
+				</table>
+			</div>	
+
+
+
+
+
+
+	
+
 		</center>
 	</div>
 </div>
+
+
+<!-- Y así sucesivamente con los demás datos de la transacción -->
+
 <!-- //check out -->
 {% endblock %}
 
 {% block javascripts %}
-
+<script>
+	$(function () {
+		$('#vaciar_carrito').click();
+	})
+  </script>
 {% endblock %}

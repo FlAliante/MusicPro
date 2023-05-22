@@ -4,16 +4,18 @@
     window.scrollTo(0,1);
   }
 </script>
-<!-- js -->
-<script type="text/javascript" src="static/js/jquery-2.1.4.min.js"></script>
-<!-- //js -->
-<!-- cart -->
-<script src="static/js/simpleCart.min.js"></script>
-<!-- cart -->
-<!-- for bootstrap working -->
-<script type="text/javascript" src="static/js/bootstrap-3.1.1.min.js"></script>
+<!-- jQuery -->
+<script src="{{ url_for('static', filename='js/jquery-2.1.4.min.js') }}"></script>
 
-<script src="static/js/jquery.easing.min.js"></script>
+<!-- simpleCart -->
+<script src="{{ url_for('static', filename='js/simpleCart.min.js') }}"></script>
+
+<!-- Bootstrap -->
+<script src="{{ url_for('static', filename='js/bootstrap-3.1.1.min.js') }}"></script>
+
+<!-- jQuery Easing -->
+<script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
+
 
 <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
 
@@ -29,7 +31,7 @@
   var compra_productos = localStorage.getItem('compra_productos');
   var formatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", })
 
-  function agregarAlCarrito(precio, description, photo) {
+  function agregarAlCarrito(precio, description, photo, id) {
     //parseo textos a numeros para sumar
     precio = parseInt(precio);
     compra_total = parseInt(compra_total);
@@ -44,6 +46,7 @@
       'description': description,
       'photo': photo,
       'format': formatter.format(precio),
+      'id' : id,
     }
     //Adjunto datos 
     compra_productos.push(objeto)
@@ -54,8 +57,8 @@
     localStorage.setItem('compra_item', compra_item);
     localStorage.setItem('compra_productos', compra_productos);
     // Actualiza el contenido del elemento HTML que muestra el número asignado
-    $('#compra_total').text(formatter.format(compra_total));
-    $('#compra_item').text(compra_item)
+    $('#compra_total').text(formatter.format(compra_total))
+    $('#compra_item').text(compra_item).show()
   }
 
   function limpiarCarrito() {
@@ -83,8 +86,13 @@
     $('#compra_item').text(compra_item)
 
 
+    if ($('#compra_item').text() != 0) {
+      $('#compra_item').show();
+
+    }
+
     $('#vaciar_carrito').on('click', function () {
-      $('#carrito_tabla').hide();
+      $('#carrito_tabla, #compra_item').hide();
       $('#carrito_msj').show();
     });
   });

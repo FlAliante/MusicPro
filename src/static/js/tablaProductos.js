@@ -51,7 +51,8 @@ function generarTablaTipoProductos(tipo_producto) {
           .replaceAll("%photo%", row.photo)
           .replaceAll("%precio%", row.precio)
           .replaceAll("%format_clp%", row.format_clp)
-          .replaceAll("%marca%", row.marca);
+          .replaceAll("%marca%", row.marca)
+          .replaceAll("%id%", row.id)          
       });
       // Retornamos un row con colum
       return `<div class="row">${view}</div>`;
@@ -87,7 +88,9 @@ function generarTablaProductoIndex() {
           .replaceAll("%marca%", row.marca)
           .replaceAll("%photo%", row.photo)
           .replaceAll("%precio%", row.precio)
-          .replaceAll("%format_clp%", row.format_clp);
+          .replaceAll("%format_clp%", row.format_clp)
+          .replaceAll("%id%", row.id)        
+
       });
       // Retornamos un row con colum
       return `<div class="row">${view}</div>`;

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="col-md-3 footer-left">
       <h2>
-        <a href="index.html"><img src="static/images/logo3.jpg" alt=" " /></a>
+        <a href="{{ url_for('app_view.index') }}"><img src="{{ url_for('static', filename='images/logo3.jpg') }}" alt=" " /></a>
       </h2>
       <p>
         Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
@@ -26,7 +26,7 @@
         <div class="col-md-4 sign-gd">
           <h4>Information</h4>
           <ul>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="{{ url_for('app_view.index') }}">Home</a></li>
             <li><a href="mens.html">Men's Wear</a></li>
             <li><a href="womens.html">Women's Wear</a></li>
             <li><a href="electronics.html">Electronics</a></li>
@@ -55,31 +55,31 @@
           <h4>Flickr Posts</h4>
           <ul>
             <li>
-              <a href="single.html"><img src="static/images/b15.jpg" alt=" " class="img-responsive" /></a>
+              <a href="single.html"><img src="{{ url_for('static', filename='images/b15.jpg') }}" alt=" " class="img-responsive" /></a>
             </li>
             <li>
-              <a href="single.html"><img src="static/images/b16.jpg" alt=" " class="img-responsive" /></a>
+              <a href="single.html"><img src="{{ url_for('static', filename='images/b16.jpg') }}" alt=" " class="img-responsive" /></a>
             </li>
             <li>
-              <a href="single.html"><img src="static/images/b17.jpg" alt=" " class="img-responsive" /></a>
+              <a href="single.html"><img src="{{ url_for('static', filename='images/b17.jpg') }}" alt=" " class="img-responsive" /></a>
             </li>
             <li>
-              <a href="single.html"><img src="static/images/b18.jpg" alt=" " class="img-responsive" /></a>
+              <a href="single.html"><img src="{{ url_for('static', filename='images/b18.jpg') }}" alt=" " class="img-responsive" /></a>
             </li>
             <li>
-              <a href="single.html"><img src="static/images/b15.jpg" alt=" " class="img-responsive" /></a>
+              <a href="single.html"><img src="{{ url_for('static', filename='images/b15.jpg') }}" alt=" " class="img-responsive" /></a>
             </li>
             <li>
-              <a href="single.html"><img src="static/images/b16.jpg" alt=" " class="img-responsive" /></a>
+              <a href="single.html"><img src="{{ url_for('static', filename='images/b16.jpg') }}" alt=" " class="img-responsive" /></a>
             </li>
             <li>
-              <a href="single.html"><img src="static/images/b17.jpg" alt=" " class="img-responsive" /></a>
+              <a href="single.html"><img src="{{ url_for('static', filename='images/b17.jpg') }}" alt=" " class="img-responsive" /></a>
             </li>
             <li>
-              <a href="single.html"><img src="static/images/b18.jpg" alt=" " class="img-responsive" /></a>
+              <a href="single.html"><img src="{{ url_for('static', filename='images/b18.jpg') }}" alt=" " class="img-responsive" /></a>
             </li>
             <li>
-              <a href="single.html"><img src="static/images/b15.jpg" alt=" " class="img-responsive" /></a>
+              <a href="single.html"><img src="{{ url_for('static', filename='images/b15.jpg') }}" alt=" " class="img-responsive" /></a>
             </li>
           </ul>
         </div>
