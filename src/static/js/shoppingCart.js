@@ -62,6 +62,8 @@ agregarAlCarrito = (precio, nombre, photo, id) => {
     // Actualiza el contenido del elemento HTML que muestra el número asignado
     $("#carrito_total").text(formatter.format(carrito_total));
     $("#carrito_item").text(carrito_item).show();
+
+    alert("Producto Agregado, revisa tu carrito")
 }
 
 // Crea el pago
