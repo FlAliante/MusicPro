@@ -6,7 +6,7 @@ var formatter = new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency: "CLP",
 });
-
+var url_api = "https://music-pro-apii-60f83f758a43.herokuapp.com"
 
 generarTablaCarrito = () => {
     // Parsear el string JSON a un objeto JavaScript con datos del carrito
@@ -83,7 +83,7 @@ generarBotonUSD = () => $("#btn_usd").on("click", function () {
     $("#carrito_progress, #amount_retart").show();
     //Consulto a la api moneda
     $.ajax({
-        url: "https://music-pro-api.herokuapp.com/api/exchange_rate",
+        url: url_api + "/api/exchange_rate",
         data: { amount_clp: carrito_total },
     }).done(function (response) {
         $("#amount_view").text(`USD ${response.format}`);
