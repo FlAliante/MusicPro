@@ -44,30 +44,44 @@ def  transaction_create():
         
         #Si no es estatus 200 lo saco del metodo
         if response.status_code != 200:
-            return make_response(response.json(), response.status_code)
-        return response.json()
+            return render_template("carrito/checkout.html", error_title= f'Error Server ({ response.status_code }): Transbank', error_message= response.json())
+
+        response = json.loads(response.content)
+        content = {
+            "amount_clp": request.form["amount_clp"],
+            "amount_usd": request.form["amount_usd"],
+            "carrito_productos": request.form["carrito_productos"],
+            "token": response["token"],
+            "url": response["url"]
+        }
+        return redirect(url_for("app_controller.transaction_status", content=json.dumps(content)))
+    
     except Exception as e:
-        return make_response(str(e), 500), print(str(e))
+        return render_template("carrito/checkout.html", error_title= f'Error Server ({ 500 }): {type(e).__name__}', error_message= str(e))
+
     finally:
         db_session.close_all()
 
 # Doc API TRANSBANK https://www.transbankdevelopers.cl/referencia/webpay?l=http#obtener-estado-de-una-transaccion
-@app_controller.route("/transaction_status", methods=["POST"])
+@app_controller.route("/transaction_status")
 def transaction_status():
     try:
+        transaction = Transaction()
+        db_session.add(transaction)
+        db_session.commit()
         #Obtengo el estado de la transacion segun el token
-        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{request.form['token']}"
- 
+        content = json.loads(request.args.get('content'))
+        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{content['token']}"
         response = requests.get(url, headers=headers)
+
         #Si no es estatus 200 lo saco del metodo
         if response.status_code != 200:
-            return render_template( response.json(), response.status_code)
+            return render_template("carrito/checkout.html", error_title= f'Error Server ({ response.status_code }): Transbank', error_message= response.json())
         
-        transaction = Transaction()
-        transaction.amount_clp=request.form['amount_clp']
-        transaction.amount_usd=request.form['amount_usd']
-        transaction.token=request.form['token']
-        transaction.url=f"{request.form['url']}?token_ws={request.form['token']}"
+        transaction.amount_clp=content['amount_clp']
+        transaction.amount_usd=content['amount_usd']
+        transaction.token=content['token']
+        transaction.url=f"{content['url']}?token_ws={content['token']}"
         
         data = json.loads(response.content)
         transaction.amount=data['amount']
@@ -77,15 +91,13 @@ def transaction_status():
         transaction.accounting_date=data['accounting_date']
         transaction.transaction_date=data['transaction_date']
         transaction.installments_number=data['installments_number']
-        db_session.add(transaction)
-        db_session.commit()
 
         # convertir el string JSON a una lista de objetos Python
-        lista_objetos = json.loads(request.form['carrito_productos'])
+        carrito_productos = json.loads(content['carrito_productos'])
 
         lista_ventas = []
         # iterar sobre la lista con un for loop
-        for objeto in lista_objetos:
+        for objeto in carrito_productos:
             venta = Venta()
             venta.amount_clp = objeto['format']
             venta.id_producto = objeto['id']
@@ -98,20 +110,32 @@ def transaction_status():
         #4051 8856 0044 6623
         return redirect(transaction.url)
     except Exception as e:
-        contexto = { 'error': True, 'status': 500, 'msj': str(e) }
-        return render_template("carrito/pagado.html", **contexto)
+        if transaction.id:
+            db_session.delete(transaction)
+            db_session.commit()
+        return render_template("carrito/checkout.html", error_title= f'Error Server ({ 500 }): {type(e).__name__}', error_message= str(e))
     finally:
         db_session.close_all()
 
 # https://www.transbankdevelopers.cl/referencia/webpay?l=http#crear-una-transaccion
+# https://www.transbankdevelopers.cl/documentacion/webpay-plus#flujo-si-usuario-aborta-el-pago
 @app_controller.route("/crear_commit")
 def crear_commit():
     try:
-        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{request.args.get('token_ws')}"
-        
+        if request.args.get('TBK_ID_SESION'):
+            error_message = f'Timeout (más de 10 minutos en el formulario de Transbank) o Pago abortado (con botón anular compra en el formulario de Webpay)'
+            session_id = request.args.get('TBK_ID_SESION')
+            transaction = db_session.query(Transaction).filter_by(session_id=session_id).first()
+            transaction.status = 'FAILED'
+            db_session.commit()
+            return render_template("carrito/checkout.html", error_title= f'Transbank TBK_ID_SESION ({session_id}): ', error_message=error_message)
+        else: 
+            token_ws = request.args.get('token_ws')
+
+        url = f"https://webpay3gint.transbank.cl/rswebpaytransaction/api/webpay/v1.2/transactions/{token_ws}"
         response = requests.put(url, headers=headers)
         if response.status_code != 200:
-            return redirect(url_for('app_view.checkout')) # Corregir y crear una pagina para excepciones
+            return render_template("carrito/checkout.html", error_title= f'Error Server ({ response.status_code }): Transbank', error_message= response.json())
 
         transaction = db_session.query(Transaction).filter_by(token=request.args.get('token_ws')).first()
         data = json.loads(response.content)
@@ -131,7 +155,7 @@ def crear_commit():
         db_session.commit()
         return redirect(url_for('app_controller.crear_pago', id=transaction.id))
     except Exception as e:
-        return make_response(str(e), 500), print(str(e))
+        return render_template("carrito/checkout.html", error_title= f'Error Server ({ 500 }): {type(e).__name__}', error_message= str(e))
     finally:
         db_session.close_all()
 
@@ -152,9 +176,9 @@ def crear_pago(id):
 
                 return render_template("carrito/pagado.html", transaction = transaction, productos = productos)
             else:
-                return redirect(request.host_url + "index.html") 
+                return redirect(url_for('app_view.index')) 
         else:  
-            return redirect(request.host_url + "index.html")      
+            return redirect(url_for('app_view.index'))      
     except Exception as e:
         return make_response(str(e), 500), print(str(e))
     finally:
