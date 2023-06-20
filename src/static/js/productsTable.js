@@ -1,8 +1,9 @@
 size_nombre_sort = 50;
+var url_api = "https://music-pro-apii-60f83f758a43.herokuapp.com"
 
 function generarTablaTipoProductos(tipo_producto) {
   $("#myTable").bootstrapTable({
-    url: "https://music-pro-api.herokuapp.com/api/get_productos",
+    url: url_api + "/api/get_productos",
     queryParams: function (params) {
       // Agregar el parámetro "?tipo_producto=" con el valor del parametro
       params.tipo_producto = tipo_producto;
@@ -58,11 +59,12 @@ function generarTablaTipoProductos(tipo_producto) {
       return `<div class="row">${view}</div>`;
     },
   });
+  $(".fixed-table-body").hide()
 }
 
 function generarTablaProductoIndex() {
   $("#myTable").bootstrapTable({
-    url: "https://music-pro-api.herokuapp.com/api/get_productos",
+    url: url_api + "/api/get_productos",
     locale: "es-CL",
     showCustomView: true,
     onLoadSuccess: function (number, size) {
@@ -70,6 +72,13 @@ function generarTablaProductoIndex() {
     },
     onPageChange: function (number, size) {
       window.scrollTo(0, 0);
+    },
+    onLoadError: (status, res) => {
+      // Ocultamos el indicador de carga en caso de que haya un error
+      console.error(res);
+      $("#txtError").text(`${res.statusText}(${res.status})`);
+      $(".progress").hide();
+      $(".alert-danger").show();
     },
     customView: function (data) {
       // Agregamos el HTML para cargar los datos
@@ -95,4 +104,5 @@ function generarTablaProductoIndex() {
       return `<div class="row">${view}</div>`;
     },
   });
+  $(".fixed-table-body").hide()
 }

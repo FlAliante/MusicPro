@@ -11,6 +11,14 @@
 </template>
 <!-- //myTable -->
 
+<!-- alert_generic -->
+<div style="margin-top: 15px;">
+  <div style="display: none;" class="alert alert-danger" role="alert">
+    {% include "resources/alert_generic.html" %}
+  </div>
+</div>
+<!-- //alert_generic -->
+
 {% block javascripts %}
 <script>
   $(function () {
@@ -18,5 +26,3 @@
   })
 </script>
 {% endblock %}
-
-
