@@ -3,7 +3,7 @@ var url_api = "https://music-pro-apii-60f83f758a43.herokuapp.com"
 
 function generarTablaTipoProductos(tipo_producto) {
   $("#myTable").bootstrapTable({
-    url: url_api + "/api/get_productos",
+    url: "/api/get_productos",
     queryParams: function (params) {
       // Agregar el parámetro "?tipo_producto=" con el valor del parametro
       params.tipo_producto = tipo_producto;
@@ -64,7 +64,7 @@ function generarTablaTipoProductos(tipo_producto) {
 
 function generarTablaProductoIndex() {
   $("#myTable").bootstrapTable({
-    url: url_api + "/api/get_productos",
+    url: "/api/get_productos",
     locale: "es-CL",
     showCustomView: true,
     onLoadSuccess: function (number, size) {

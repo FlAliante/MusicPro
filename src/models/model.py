@@ -1,9 +1,32 @@
+import random
 from MySQLdb import TIMESTAMP
 import requests
 from sqlalchemy import DECIMAL, Column, Integer, String, DateTime
 from datetime import datetime
 from config import Base
 from sqlalchemy.sql import func
+
+
+class TipoProducto(Base):
+    __tablename__ = 'tipo_producto'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(50), nullable=False)
+    fecha_creacion = Column(DateTime, default=datetime.utcnow, nullable=False)
+    fecha_actualizacion = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __init__(self, nombre, categoria):
+        self.nombre = nombre
+        self.categoria = categoria
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            #"fecha_creacion": self.fecha_creacion,
+            #"fecha_actualizacion": self.fecha_actualizacion,
+        }
+
 
 class Producto(Base):
     __tablename__ = 'producto'
@@ -25,6 +48,25 @@ class Producto(Base):
         self.fecha_actualizacion = None
         self.tipo_producto = None
         self.photo = None
+        self.tipo_producto = None
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "precio": str(self.precio),
+            "fecha_creacion": self.fecha_creacion,
+            "fecha_actualizacion": self.fecha_actualizacion,
+            #"tipo_producto_id": self.tipo_producto_id
+        }
+    
+    # Genera una secuencia de letras mayúsculas al azar de longitud n
+    def random_letters(n):
+        return ''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZ', k=n))
+
+    # Genera un número entero al azar entre min y max
+    def random_integer(min, max):
+        return random.randint(min, max)
 
 class Venta(Base):
     __tablename__ = 'venta'
