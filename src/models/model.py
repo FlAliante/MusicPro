@@ -72,11 +72,8 @@ class Venta(Base):
     __tablename__ = 'venta'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    update_date = Column(DateTime, nullable=False,
-                            server_default=func.current_timestamp())
-    create_date = Column(nullable=False,
-                            server_default=func.current_timestamp(),
-                            onupdate=func.current_timestamp())
+    update_date = Column(DateTime, nullable=False, server_default=func.current_timestamp())
+    create_date = Column(DateTime, nullable=False, server_default=func.current_timestamp(), onupdate=func.current_timestamp())
     id_producto = Column(Integer)
     id_transaction = Column(Integer)
     amount_clp = Column(String(50))
@@ -86,15 +83,22 @@ class Venta(Base):
         self.id_transaction = None
         self.amount_clp = None
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "update_date": str(self.update_date),
+            "create_date": str(self.create_date),
+            "id_producto": self.id_producto,
+            "id_transaction": self.id_transaction,
+            "amount_clp": self.amount_clp
+        }
+
 class Transaction(Base):
     __tablename__ = 'transactions'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    update_date = Column(DateTime, nullable=False,
-                         server_default=func.current_timestamp())
-    create_date = Column(DateTime, nullable=False,
-                         server_default=func.current_timestamp(),
-                         onupdate=func.current_timestamp())
+    update_date = Column(DateTime, nullable=False, server_default=func.current_timestamp())
+    create_date = Column(DateTime, nullable=False, server_default=func.current_timestamp(), onupdate=func.current_timestamp())
     vci = Column(String(10))
     amount = Column(Integer)
     amount_clp = Column(String(100))
@@ -128,3 +132,26 @@ class Transaction(Base):
         self.installments_number = None
         self.token = None
         self.url = None
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "update_date": str(self.update_date),
+            "create_date": str(self.create_date),
+            "vci": self.vci,
+            "amount": self.amount,
+            "amount_clp": self.amount_clp,
+            "amount_usd": self.amount_usd,
+            "status": self.status,
+            "buy_order": self.buy_order,
+            "session_id": self.session_id,
+            "card_detail": self.card_detail,
+            "accounting_date": self.accounting_date,
+            "transaction_date": str(self.transaction_date),
+            "authorization_code": self.authorization_code,
+            "payment_type_code": self.payment_type_code,
+            "response_code": self.response_code,
+            "installments_number": self.installments_number,
+            "token": self.token,
+            "url": self.url
+        }
