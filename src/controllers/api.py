@@ -1,3 +1,4 @@
+import base64
 from flask import Blueprint, jsonify, make_response, request
 from sqlalchemy.sql.expression import func
 from sqlalchemy import text
@@ -7,6 +8,8 @@ from src.models.model import Producto, Venta, Transaction
 
 import requests
 import locale
+import os
+from sqlalchemy import text
 
 api_producto = Blueprint("api_producto", __name__)
 
@@ -96,9 +99,6 @@ class ProductoController():
         # Devuelve la cadena formateada en pesos chilenos (CLP)
         return f"${int_part}" + (f",{dec_part}" if dec_part else "")
 
-
-from sqlalchemy import text
-
 class VentaController():
     @api_producto.route('/api/venta/status/<status>', methods=['GET'])
     def get_venta_for(status):
@@ -168,3 +168,58 @@ class TransactionController():
             return make_response({'status': 500, 'error': str(e)}, 500)
         finally:
             db_session.close_all()
+
+    @api_producto.route('/api/test_adjunto', methods=['POST'])
+    def post():
+        try:
+            file_path = "C:/Users/Usuario/Downloads/"
+    
+            # Verifica si se enviaron archivos
+            if 'file' not in request.files:
+                return jsonify({'message': 'No se enviaron archivos'}), 400
+    
+            # Obtiene los archivos enviados
+            files = request.files.getlist('file')
+    
+            # Guarda los archivos en la ruta especificada
+            for file in files:
+                filename = file.filename
+                file_content_decoded = base64.b64decode(file)
+                file.save(os.path.join(file_path, filename))
+    
+            return jsonify({'message': 'Documentos enviados con éxito'})
+        except Exception as e:
+            print(str(e))
+            return make_response({'status': 500, 'error': str(e)}, 500)
+        finally:
+            db_session.close_all()
+
+
+    @api_producto.route('/api/test_adjunto_json', methods=['POST'])
+    def post_json():
+        try:
+            # Ruta donde se guardarán los archivos
+            file_path = "C:/Users/Usuario/Downloads/"
+
+            # Verifica si se recibió un JSON en la solicitud
+            if request.json is None:
+                return jsonify({'message': 'No se recibió un JSON'}), 400
+
+
+            # Obtiene la lista de archivos del JSON
+            files = request.json
+
+            # Guarda los archivos en la ruta especificada
+            for file_data in files:
+                filename = file_data['filename']
+                file_content = file_data['fileContent']
+                # Decodifica el contenido base64
+                file_content_decoded = base64.b64decode(file_content)
+                # Escribe el contenido en el archivo
+                with open(os.path.join(file_path, filename), 'wb') as f:
+                    f.write(file_content_decoded)
+
+            return jsonify({'message': 'Documentos enviados con éxito'})
+        except Exception as e:
+            print(str(e))
+            return make_response({'status': 500, 'error': str(e)}, 500)
