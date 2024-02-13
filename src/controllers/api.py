@@ -173,27 +173,30 @@ class TransactionController():
     def post():
         try:
             file_path = "C:/Users/Usuario/Downloads/"
-    
+
             # Verifica si se enviaron archivos
             if 'file' not in request.files:
                 return jsonify({'message': 'No se enviaron archivos'}), 400
-    
+
             # Obtiene los archivos enviados
             files = request.files.getlist('file')
-    
-            # Guarda los archivos en la ruta especificada
+
+            # Decodificar y guardar los archivos en la ruta especificada
             for file in files:
+                # Decodificar el contenido base64
+                decoded_content = base64.b64decode(file.read())
                 filename = file.filename
-                file_content_decoded = base64.b64decode(file)
-                file.save(os.path.join(file_path, filename))
-    
+
+                # Guardar el archivo decodificado
+                with open(os.path.join(file_path, filename), 'wb') as f:
+                    f.write(decoded_content)
+
             return jsonify({'message': 'Documentos enviados con éxito'})
         except Exception as e:
             print(str(e))
             return make_response({'status': 500, 'error': str(e)}, 500)
         finally:
             db_session.close_all()
-
 
     @api_producto.route('/api/test_adjunto_json', methods=['POST'])
     def post_json():
@@ -223,3 +226,44 @@ class TransactionController():
         except Exception as e:
             print(str(e))
             return make_response({'status': 500, 'error': str(e)}, 500)
+        
+    @api_producto.route('/api/test_adjunto_descarga', methods=['POST'])
+    def test_adjunto_descarga():   
+
+        url = "https://malk-dev-ed.my.salesforce.com/services/data/v42.0/query/?q=SELECT+id,VersionData,FileType,Title,FileExtension,PathOnClient+FROM+ContentVersion"
+
+        payload = {}
+        headers = {
+          'Authorization': 'Bearer 00D4x000004xpdx!ARoAQAu6QMPGr1h4ByXP2GBvJaHBtMD1ReZYQTRH8FBkA_XzddCSKqaJNxLCWGHdfw2ZQIJvUKbZRSarRSzyue13txGmVc7x'
+        }
+
+        response = requests.request("GET", url, headers=headers, data=payload)
+        version_data_collection = []
+
+        if response.status_code == 200:
+            json_data = response.json()
+            for record in json_data['records']:
+                version_data_collection.append({
+                    'VersionData': record['VersionData'],
+                    'PathOnClient': record['PathOnClient']
+                })
+        else:
+            return jsonify({'message': f"Error al obtener los datos: {response.status_code}"})
+
+        # Decodificar y guardar los archivos en la ruta especificada
+        for record in version_data_collection:
+            response = requests.request("GET", f"https://malk-dev-ed.my.salesforce.com/{record['VersionData']}", headers=headers, data=payload)
+            if response.status_code == 200:
+                with open(f"C:/Users/Usuario/Downloads/{record['PathOnClient']}" , "wb") as f:
+                    f.write(response.content)
+            else:
+                return jsonify({'message': 'Documentos enviados con sin éxito'})
+        
+        return jsonify({'message': 'Documentos enviados con éxito'})
+
+
+
+
+
+        
+ 
