@@ -228,36 +228,53 @@ class TransactionController():
             return make_response({'status': 500, 'error': str(e)}, 500)
         
     @api_producto.route('/api/test_adjunto_descarga', methods=['POST'])
-    def test_adjunto_descarga():   
+    def test_adjunto_descarga():  
+        base_url = "https://test.salesforce.com"
+        endpoint = "/services/oauth2/token"
+        grant_type = "password"
+        client_id = "3MVG9j6uMOMC1DNgb228MoMe2FVkscJQ0bv2IHsNpF80ouPWMCxVyPEKrBs.0w9XSOkoKqXt2sV7wJGNP_YvU"
+        client_secret = "E6CC5003E4172DF13D4F83E07C1C625EBAF3724E42F6EAF6F8070EB22A7EACA8"
+        username = "consultor@vasslatam-security.com.sbxvass3"
+        password = "Vasslatam2022*XOGh34klsHmtZPYIt17neiKYa"
 
-        url = "https://malk-dev-ed.my.salesforce.com/services/data/v42.0/query/?q=SELECT+id,VersionData,FileType,Title,FileExtension,PathOnClient+FROM+ContentVersion"
+        url = f"{base_url}{endpoint}?grant_type={grant_type}&client_id={client_id}&client_secret={client_secret}&username={username}&password={password}"
+
+        payload = {}
+        headers = {}
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        print(response.text)
+
+        data = response.json()
+        access_token = data['access_token']
+        instance_url = data['instance_url']
+
+        url = f"{instance_url}/services/data/v60.0/query/?q=SELECT+id,VersionData,FileType,Title,FileExtension,PathOnClient+FROM+ContentVersion"
 
         payload = {}
         headers = {
-          'Authorization': 'Bearer 00D4x000004xpdx!ARoAQAu6QMPGr1h4ByXP2GBvJaHBtMD1ReZYQTRH8FBkA_XzddCSKqaJNxLCWGHdfw2ZQIJvUKbZRSarRSzyue13txGmVc7x'
+          'Authorization': f'Bearer {access_token}'
         }
 
         response = requests.request("GET", url, headers=headers, data=payload)
-        version_data_collection = []
 
         if response.status_code == 200:
             json_data = response.json()
-            for record in json_data['records']:
-                version_data_collection.append({
-                    'VersionData': record['VersionData'],
-                    'PathOnClient': record['PathOnClient']
-                })
         else:
             return jsonify({'message': f"Error al obtener los datos: {response.status_code}"})
-
-        # Decodificar y guardar los archivos en la ruta especificada
-        for record in version_data_collection:
-            response = requests.request("GET", f"https://malk-dev-ed.my.salesforce.com/{record['VersionData']}", headers=headers, data=payload)
+        
+        for record in json_data['records']:
+            response = requests.request("GET", f"{instance_url}{record['VersionData']}", headers=headers, data=payload)
             if response.status_code == 200:
-                with open(f"C:/Users/Usuario/Downloads/{record['PathOnClient']}" , "wb") as f:
+                #full_path = f"C:/Users/Usuario/Downloads/"
+                #record_folder = os.path.join(full_path, record['Id'])
+                #os.makedirs(record_folder, exist_ok=True)
+
+                with open(f"C:/Users/Usuario/Downloads/{record['Id']} - {record['PathOnClient']}" , "wb") as f:
                     f.write(response.content)
             else:
-                return jsonify({'message': 'Documentos enviados con sin éxito'})
+                return jsonify({'message': 'Documentos enviados sin éxito'})
         
         return jsonify({'message': 'Documentos enviados con éxito'})
 
